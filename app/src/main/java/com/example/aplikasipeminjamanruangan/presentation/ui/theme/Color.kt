@@ -2,7 +2,14 @@ package com.example.aplikasipeminjamanruangan.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Primary = Color(0xFF05274D)
+val Secondary = Color(0xFFAD1457)
+val Background = Color(0xFF063970)
+val Surface = Color(0xFF3EC6FF)
+val OnSurface = Color(0xFFFFFFFF)
+val OnPrimary = Color(0xFFF9EFE6)
+val onSecondary = Color(0xFF000000)
+val Tertiary = Color(0xFF45464F)
+val InverseOnSurface = Color(0xFFF9EFE6)
+val LightOnTertiary = Color(0xFFF9EFE6)
+val LightTertiaryContainer = Color(0xFFD3EABC)
