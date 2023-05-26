@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "487762116782",
+    "firebase_url": "https://spr-pcr-382908-default-rtdb.firebaseio.com",
+    "project_id": "spr-pcr-382908",
+    "storage_bucket": "spr-pcr-382908.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487762116782:android:9bd42e3a705ba8d0d4ad3f",
+        "android_client_info": {
+          "package_name": "com.example.aplikasipeminjamanruangan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487762116782-pon8nq2kuebhgjgs16m0u2clps1gp689.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR2186OjpquOSriknBUjBIxWZWucLZgMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487762116782-pon8nq2kuebhgjgs16m0u2clps1gp689.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487762116782:android:e8f2416e792d697cd4ad3f",
+        "android_client_info": {
+          "package_name": "com.pa.sprpcr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487762116782-pon8nq2kuebhgjgs16m0u2clps1gp689.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR2186OjpquOSriknBUjBIxWZWucLZgMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487762116782-pon8nq2kuebhgjgs16m0u2clps1gp689.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

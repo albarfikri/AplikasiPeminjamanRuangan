@@ -3,29 +3,31 @@ package com.example.aplikasipeminjamanruangan.presentation.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.aplikasipeminjamanruangan.presentation.navigation.NavGraph
-import com.example.aplikasipeminjamanruangan.presentation.navigation.listOfTabScreen
+import com.example.aplikasipeminjamanruangan.presentation.navigation.*
 import com.example.aplikasipeminjamanruangan.presentation.ui.theme.AplikasiPeminjamanRuanganTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            mainApp()
+            MainApp()
         }
     }
 }
 
 @Composable
-fun mainApp() {
+fun MainApp() {
     AplikasiPeminjamanRuanganTheme {
         // A surface container using the 'background' color from the theme
         val navController = rememberNavController()
@@ -37,17 +39,31 @@ fun mainApp() {
 
         val currentScreen = listOfTabScreen.find {
             it.route == currentDestination?.route
-        }
+        } ?: Home
 
-        Scaffold() { innerPadding ->
+        Scaffold(
+            bottomBar = { 
+                AnimatedVisibility(visible = currentDestination?.route != Splash.route) {
+                    bottomBar(navBackStackEntry = currentBackStack, navController = navController) }
+                }
+        ) { innerPadding ->
             NavGraph(navController = navController, modifier = Modifier.padding(innerPadding))
         }
     }
 }
 
+@Composable
+fun bottomBar(navBackStackEntry: NavBackStackEntry?, navController: NavHostController){
+    AnimatedVisibility(visible = true) {
+        HomeBottomNavBar(
+            navBackStackEntry = navBackStackEntry,
+            navController = navController
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    mainApp()
+    MainApp()
 }
