@@ -7,7 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.aplikasipeminjamanruangan.presentation.screen.HomeScreen
+import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.SplashScreen
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 

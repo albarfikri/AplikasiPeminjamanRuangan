@@ -1,22 +1,21 @@
-package com.example.aplikasipeminjamanruangan.presentation.screen
+package com.example.aplikasipeminjamanruangan.presentation.screen.home
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import com.example.aplikasipeminjamanruangan.R
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -26,13 +25,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 
 @Composable
 fun HomeScreen(modifier: Modifier, appViewModel: AppViewModel) {
+    val roomsState by appViewModel.roomsState.collectAsState()
+
     Column(
-        modifier = modifier.padding(20.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         Text(color = MaterialTheme.colors.onPrimary, text = buildAnnotatedString {
             append("Hai, ")
@@ -47,10 +49,24 @@ fun HomeScreen(modifier: Modifier, appViewModel: AppViewModel) {
             }
         })
         CardFeature(modifier = modifier)
-        Spacer(modifier = modifier.size(2.dp))
+        Spacer(modifier = modifier.size(1.dp))
         DataListRoomI(modifier = modifier)
-        DataListRoomII(modifier = modifier)
-        DataListRoomIII(modifier = modifier)
+        when {
+            !roomsState.data.isNullOrEmpty() -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                ) {
+                    items(roomsState.data!!) { data ->
+                        ItemCard(
+                            fotoRuangan = data?.foto_ruangan!!,
+                            namaRuangan = data.nama_ruangan!!,
+                            fasilitasRuangan = data.fasilitas_ruangan!!,
+                            modifier = modifier
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -97,53 +113,46 @@ fun FloorDescription(floorName: String) {
 }
 
 @Composable
-fun ItemCard(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+fun ItemCard(
+    fotoRuangan: String,
+    namaRuangan: String,
+    fasilitasRuangan: String,
+    modifier: Modifier
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(270.dp)
+            .padding(4.dp),
+        shape = RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp),
+        elevation = 10.dp
     ) {
-        Card(
-            modifier = Modifier
-                .width(200.dp)
-                .height(270.dp),
-            shape = RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp),
-            backgroundColor = Color.White,
-            border = BorderStroke(width = 3.dp, Color.Gray),
-            elevation = 10.dp
-        ) {
-            Column {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = "Image",
-                    modifier = modifier
-                        .height(150.dp)
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.Crop
+        Column {
+            AsyncImage(
+                modifier = Modifier.height(180.dp),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(fotoRuangan)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = namaRuangan,
+                contentScale = ContentScale.Crop
+            )
+            Column(modifier = Modifier.padding(12.dp)){
+                Text(
+                    color = Color.Black,
+                    text = namaRuangan,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
                 )
-
-                Column(
-                    modifier = modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = "Ruangan",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                    Text(
-                        text = "Fasilitas",
-                        color = Color.LightGray,
-                        fontSize = 13.sp,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
+                Text(
+                    text = fasilitasRuangan,
+                    color = Color.LightGray,
+                    fontSize = 13.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
-
         }
     }
 }
@@ -151,5 +160,5 @@ fun ItemCard(modifier: Modifier) {
 @Preview()
 @Composable
 fun DefaultPreview() {
-    ItemCard(modifier = Modifier)
+    //ItemCard(namaRuangan = "test", fasilitasRuangan = "Tets" , modifier = Modifier)
 }
