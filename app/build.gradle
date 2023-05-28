@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -81,6 +82,9 @@ dependencies {
 
     // coil
     implementation "io.coil-kt:coil-compose:2.4.0"
+
+    // constraint layout
+    implementation 'androidx.constraintlayout:constraintlayout-compose-android:1.1.0-alpha10'
 }
 
 kapt {

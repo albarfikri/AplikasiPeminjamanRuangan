@@ -45,7 +45,7 @@ fun MainApp() {
 
         Scaffold(
             bottomBar = { 
-                AnimatedVisibility(visible = currentDestination?.route != Splash.route) {
+                AnimatedVisibility(visible = currentDestination?.route != Splash.route && currentDestination?.route != HomeDetail.route ) {
                     bottomBar(navBackStackEntry = currentBackStack, navController = navController) }
                 }
         ) { innerPadding ->
