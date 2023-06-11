@@ -70,8 +70,8 @@ fun ItemCard(
 ) {
     Card(
         modifier = Modifier
-            .height(270.dp)
-            .width(190.dp)
+            .height(265.dp)
+            .width(200.dp)
             .padding(4.dp)
             .clip(RoundedCornerShape(topEnd = 16.dp, bottomStart = 16.dp))
             .background(brush),

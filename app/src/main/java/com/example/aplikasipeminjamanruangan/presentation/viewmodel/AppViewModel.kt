@@ -3,7 +3,7 @@ package com.example.aplikasipeminjamanruangan.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplikasipeminjamanruangan.data.Resource
-import com.example.aplikasipeminjamanruangan.domain.RealtimeDBRoomsState
+import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.domain.usecase.IAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

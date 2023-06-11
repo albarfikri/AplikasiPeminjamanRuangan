@@ -1,4 +1,4 @@
-package com.example.aplikasipeminjamanruangan.domain
+package com.example.aplikasipeminjamanruangan.presentation.states
 
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 

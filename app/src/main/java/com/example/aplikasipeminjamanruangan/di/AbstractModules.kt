@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AbstractModules {
-
     @Binds
     abstract fun provideIAppRepository(appRepository: AppRepository): IAppRepository
+
 }

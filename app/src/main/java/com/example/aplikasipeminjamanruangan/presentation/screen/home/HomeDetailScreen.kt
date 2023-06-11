@@ -47,6 +47,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,16 +55,23 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.aplikasipeminjamanruangan.R
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.presentation.utils.SwipingStates
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeDetailScreen(sharedViewModel: SharedViewModel, onNavBack: () -> Unit, modifier: Modifier) {
-    val data = sharedViewModel.sharedStated.collectAsState().value
+fun HomeDetailScreen(
+    sharedViewModel: SharedViewModel,
+    onNavBack: () -> Unit,
+    onLending: (RoomsModel) -> Unit,
+    modifier: Modifier
+) {
+    val data = sharedViewModel.sharedStated.collectAsStateWithLifecycle().value
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
     val computedProgress by remember {
@@ -183,7 +191,7 @@ fun HomeDetailScreen(sharedViewModel: SharedViewModel, onNavBack: () -> Unit, mo
                     onNavBack = { onNavBack() },
                     data = data
                 )
-                BottomSection(data = data)
+                BottomSection(data = data, onLending = onLending)
             }
         }
     }
@@ -220,6 +228,8 @@ fun TopSection(
                         SwipingStates.EXPANDED -> 1.0f
                     }
                 ),
+            placeholder = painterResource(id = R.drawable.loading_img),
+            error = painterResource(id = R.drawable.ic_broken_image),
             model = ImageRequest.Builder(LocalContext.current).data(data.foto_ruangan)
                 .crossfade(true).build(),
             contentDescription = "",
@@ -270,7 +280,7 @@ fun TopSection(
 }
 
 @Composable
-fun BottomSection(data: RoomsModel) {
+fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
     Box(
         modifier = Modifier
             .layoutId("body")
@@ -293,12 +303,12 @@ fun BottomSection(data: RoomsModel) {
             )
             Spacer(modifier = Modifier.height(18.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onLending(data) },
                 border = BorderStroke(1.dp, Color.White),
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(6.dp),
-                shape =  RoundedCornerShape(50),
+                shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
                 Text("Pinjam", color = Color.White, style = MaterialTheme.typography.body1)

@@ -26,7 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.aplikasipeminjamanruangan.domain.RealtimeDBRoomsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.presentation.components.home.ItemCard
 import com.example.aplikasipeminjamanruangan.presentation.utils.AnimateShimmer
@@ -42,7 +43,7 @@ fun HomeScreen(
     onHeadingToDetail: (RoomsModel) -> Unit,
     modifier: Modifier
 ) {
-    val roomsState by appViewModel.roomsState.collectAsState()
+    val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -113,7 +114,9 @@ fun SpreadingData(
     floor: String,
     modifier: Modifier
 ) {
-    LazyRow {
+    LazyRow(
+
+    ) {
         items(roomsState.data!!) { data ->
             if (data?.lantai_ruangan.equals(floor)) {
                 ListRoomBasedOnFloor(

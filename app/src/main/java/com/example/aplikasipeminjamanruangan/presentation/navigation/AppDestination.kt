@@ -31,6 +31,12 @@ object HomeDetail: AppDestination{
     override val text = "Home Detail"
 }
 
+object Lending: AppDestination{
+    override val icon = Icons.Filled.Home
+    override val route = "Lending"
+    override val text = "Lending"
+}
+
 object WaitingList: AppDestination{
     override val icon = Icons.Filled.List
     override val route = "Waiting"

@@ -13,3 +13,17 @@ enum class SwipingStates {
     EXPANDED, COLLAPSED
 }
 
+// Floating Action Button
+enum class MultiFloatingState{
+    EXPANDED, COLLAPSED
+}
+
+// List of label
+
+// Image Detection URL
+const val BASE_URL_IMAGE_DETECTION = "http://103.193.176.122:5000"
+const val BASE_URL_PCR = "https://v2.api.pcr.ac.id/api/"
+const val COLLECTION = "mahasiswa"
+
+const val URL_PCR = "URL PCR"
+const val URL_IMAGE_DETECTION = "URL IMAGE DETECTION"

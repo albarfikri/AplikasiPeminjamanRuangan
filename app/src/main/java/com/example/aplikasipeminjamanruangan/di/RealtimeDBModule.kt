@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RealtimeDBModule {
-
     @Provides
     @Singleton
     fun provideRealtimeDBRef(): DatabaseReference = Firebase.database.getReference(DB_REFERENCES)
