@@ -7,7 +7,9 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -134,9 +136,21 @@ fun LendingScreen(
     }
 
     // image picking
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-        cameraXViewModel.saveUriFromGallery(it!!)
-    }
+    val launcher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri ->
+                if (uri!=null) {
+                    val contentUri = Uri.parse(uri.toString())
+                    val imageFile = getRealPathFromURI(context, contentUri).let {
+                        File(it)
+                    }
+                    cameraXViewModel.saveUriFromGallery(uri!!)
+                    retrofitViewModel.uploadImage(imageFile)
+                } else {
+                    Toast.makeText(context, "Canceling Image Selection", Toast.LENGTH_SHORT).show()
+                }
+            })
 
     val items = listOf(
         MinFabItem(
@@ -160,12 +174,14 @@ fun LendingScreen(
                 when (minFabItem.identifier) {
                     Identifier.Camera.name -> {
                         cameraXViewModel.isLaunched(true)
+                        multiFloatingState = MultiFloatingState.COLLAPSED
                         permissionState.launchPermissionRequest()
                     }
 
                     Identifier.Gallery.name -> {
                         cameraXViewModel.isGalleryLaunched(true)
-                        launcher.launch("image/*")
+                        multiFloatingState = MultiFloatingState.COLLAPSED
+                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     }
                 }
             }, items = items
@@ -198,7 +214,9 @@ fun LendingScreen(
                     if (uriState.uri != null) {
                         LaunchedEffect(key1 = true) {
                             val imageFile =
-                                getRealPathFromURI(context, uriState.uri!!)?.let { File(it) }
+                                getRealPathFromURI(context, uriState.uri!!)?.let {
+                                    File(it)
+                                }
                             if (imageFile != null) {
                                 retrofitViewModel.uploadImage(imageFile)
                             }

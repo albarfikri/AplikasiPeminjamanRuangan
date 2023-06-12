@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -68,6 +69,7 @@ class CameraXRepositoryImp @Inject constructor(
                             "Saved image ${uri?.path}",
                             Toast.LENGTH_LONG
                         ).show()
+                        Log.d("URL FROM CAMERA",uri?.path!!)
                         trySend(
                             Resource.Success(
                                 CameraXModel(
