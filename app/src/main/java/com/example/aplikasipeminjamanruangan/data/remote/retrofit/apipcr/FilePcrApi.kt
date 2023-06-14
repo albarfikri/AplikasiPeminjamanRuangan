@@ -7,9 +7,9 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface FilePcrApi {
-    @GET("akademik-mahasiswa")
+    @GET("/api/akademik-mahasiswa")
     suspend fun validateNim(
-        @Header("Authorization") apikey: String,
+        @Query("apikey") apikey: String,
         @Query("collection") collection: String,
         @Query("nim") nim: String
     ): RetrofitPcrModel

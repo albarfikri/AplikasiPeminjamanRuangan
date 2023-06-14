@@ -22,7 +22,7 @@ enum class MultiFloatingState{
 
 // Image Detection URL
 const val BASE_URL_IMAGE_DETECTION = "http://103.193.176.122:5000"
-const val BASE_URL_PCR = "https://v2.api.pcr.ac.id/api/"
+const val BASE_URL_PCR = "https://v2.api.pcr.ac.id"
 const val COLLECTION = "mahasiswa"
 
 const val URL_PCR = "URL PCR"

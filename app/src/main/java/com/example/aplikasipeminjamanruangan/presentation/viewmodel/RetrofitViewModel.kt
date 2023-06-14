@@ -25,17 +25,33 @@ class RetrofitViewModel @Inject constructor(
     private val _isNimValid = MutableStateFlow(RetrofitNimValidation())
     val isNimValid: StateFlow<RetrofitNimValidation> = _isNimValid.asStateFlow()
 
+    fun deleteData() = _isNimValid.update { it.copy(data = null) }
+
     fun uploadImage(file: File) = viewModelScope.launch {
         appUseCase.getImageResult(file).collect { result ->
-            when(result){
+            when (result) {
                 is Resource.Loading -> {
                     _isTextDetected.update { it.copy(data = null, isLoading = true, errMsg = null) }
                 }
+
                 is Resource.Success -> {
-                    _isTextDetected.update { it.copy(data = result.data, isLoading = false, errMsg = null) }
+                    _isTextDetected.update {
+                        it.copy(
+                            data = result.data,
+                            isLoading = false,
+                            errMsg = null
+                        )
+                    }
                 }
+
                 is Resource.Error -> {
-                    _isTextDetected.update { it.copy (data = null, isLoading = false, errMsg = result.exception.message)}
+                    _isTextDetected.update {
+                        it.copy(
+                            data = null,
+                            isLoading = false,
+                            errMsg = result.exception.message
+                        )
+                    }
                 }
             }
         }
@@ -43,20 +59,31 @@ class RetrofitViewModel @Inject constructor(
 
     fun verifyNim(nim: String) = viewModelScope.launch {
         appUseCase.verifiedNim(nim).collect { result ->
-            when(result){
+            when (result) {
                 is Resource.Loading -> {
                     _isNimValid.update { it.copy(data = null, isLoading = true, errMsg = null) }
                 }
+
                 is Resource.Success -> {
-                    _isNimValid.update { it.copy(data = result.data.items, isLoading = false, errMsg = null) }
+                    _isNimValid.update {
+                        it.copy(
+                            data = result.data.items,
+                            isLoading = false,
+                            errMsg = null
+                        )
+                    }
                 }
+
                 is Resource.Error -> {
-                    _isNimValid.update { it.copy (data = null, isLoading = false, errMsg = result.exception.message)}
+                    _isNimValid.update {
+                        it.copy(
+                            data = null,
+                            isLoading = false,
+                            errMsg = result.exception.message
+                        )
+                    }
                 }
             }
         }
     }
-
-
-
 }

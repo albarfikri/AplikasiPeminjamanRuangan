@@ -140,13 +140,13 @@ fun LendingScreen(
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
             onResult = { uri ->
-                if (uri!=null) {
+                if (uri != null) {
                     val contentUri = Uri.parse(uri.toString())
-                    val imageFile = getRealPathFromURI(context, contentUri).let {
-                        File(it)
+                    val imageFile = getRealPathFromURI(context, contentUri)?.let { File(it) }
+                    cameraXViewModel.saveUriFromGallery(uri)
+                    if (imageFile != null) {
+                        retrofitViewModel.uploadImage(imageFile)
                     }
-                    cameraXViewModel.saveUriFromGallery(uri!!)
-                    retrofitViewModel.uploadImage(imageFile)
                 } else {
                     Toast.makeText(context, "Canceling Image Selection", Toast.LENGTH_SHORT).show()
                 }
@@ -171,6 +171,7 @@ fun LendingScreen(
             }, onItemClick = {
 
             }, onMinFabItemClick = { minFabItem ->
+                retrofitViewModel.deleteData()
                 when (minFabItem.identifier) {
                     Identifier.Camera.name -> {
                         cameraXViewModel.isLaunched(true)
@@ -228,6 +229,11 @@ fun LendingScreen(
                             isNimVerified = isNimValid
                         )
                     }
+
+                    if (isNimValid.data != null && !isTextDetected.isLoading && !isTextDetected.data?.nim.isNullOrEmpty()) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        FinalVerificationStatus(isNimValid = isNimValid)
+                    }
                 }
             }
         }
@@ -281,7 +287,7 @@ fun MultiFloatingButton(
     onMultiFabStateChange: (MultiFloatingState) -> Unit,
     onMinFabItemClick: (MinFabItem) -> Unit,
     onItemClick: () -> Unit,
-    items: List<MinFabItem>
+    items: List<MinFabItem>,
 ) {
     val transition = updateTransition(targetState = multiFloatingState, label = "transition")
 
@@ -433,13 +439,14 @@ fun ShowingImageAndStatusOutput(
             AsyncImage(
                 modifier = Modifier
                     .height(300.dp)
-                    .clip(RoundedCornerShape(18.dp)),
+                    .clip(RoundedCornerShape(18.dp))
+                    .background(MaterialTheme.colors.secondary),
                 model = ImageRequest.Builder(LocalContext.current).data(uriState.uri)
                     .crossfade(true).build(),
                 placeholder = painterResource(id = R.drawable.loading_img),
                 error = painterResource(id = R.drawable.ic_broken_image),
                 contentDescription = "",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
             )
             if (!isTextDetected.isLoading && !isTextDetected.data?.nim.isNullOrEmpty()) {
                 Button(
@@ -467,6 +474,133 @@ fun ShowingImageAndStatusOutput(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun FinalVerificationStatus(isNimValid: RetrofitNimValidation) {
+    Card(
+        elevation = 10.dp, modifier = Modifier
+            .clip(RoundedCornerShape(18.dp))
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+        ) {
+            if (isNimValid.data != null) {
+                isNimValid.data.forEach { item ->
+                    Text(
+                        color = Color.Green,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        text = "Data valid"
+                    )
+                    Text(color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        text = buildAnnotatedString {
+                            append("Nama: ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp
+                                )
+                            ) {
+                                append(
+                                    "${item.nama}"
+                                )
+                            }
+                        })
+                    Text(color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        text = buildAnnotatedString {
+                            append("Nim: ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp
+                                )
+                            ) {
+                                append(
+                                    "${item.nim}"
+                                )
+                            }
+                        })
+                    Text(color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        text = buildAnnotatedString {
+                            append("Prodi: ")
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp
+                                )
+                            ) {
+                                append(
+                                    "${item.prodi}"
+                                )
+                            }
+                        })
+                }
+                Button(
+                    onClick = {
+
+                    },
+                    border = BorderStroke(1.dp, Color.White),
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(6.dp),
+                    shape = RoundedCornerShape(50),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+                ) {
+                    Text(
+                        "Selanjutnya",
+                        color = Color.White,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            } else if (isNimValid.errMsg != null) {
+                Text(color = MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    text = buildAnnotatedString {
+                        append("Error Terjadi")
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp
+                            )
+                        ) {
+                            append(
+                                isNimValid.errMsg.toString()
+                            )
+                        }
+                    })
+            } else {
+                Text(color = MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    text = buildAnnotatedString {
+                        append("Data tidak valid.")
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color.Black,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp
+                            )
+                        ) {
+                            append(
+                                "Cek kembali kartu ktm anda."
+                            )
+                        }
+                    })
             }
         }
     }
