@@ -19,11 +19,9 @@ class AppViewModel @Inject constructor(
 ): ViewModel() {
     private val _roomsState = MutableStateFlow(RealtimeDBRoomsState())
     val roomsState: StateFlow<RealtimeDBRoomsState> = _roomsState.asStateFlow()
-
     init{
         getRooms()
     }
-
     private fun getRooms() = viewModelScope.launch {
         AppUseCase.getRooms().collect { result ->
             when(result){

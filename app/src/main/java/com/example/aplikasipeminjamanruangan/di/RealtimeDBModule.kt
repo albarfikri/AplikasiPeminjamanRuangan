@@ -1,6 +1,8 @@
 package com.example.aplikasipeminjamanruangan.di
 
-import com.example.aplikasipeminjamanruangan.presentation.utils.DB_REFERENCES
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -8,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -15,5 +18,11 @@ import javax.inject.Singleton
 class RealtimeDBModule {
     @Provides
     @Singleton
-    fun provideRealtimeDBRef(): DatabaseReference = Firebase.database.getReference(DB_REFERENCES)
+    @Named(DB_ROOMS)
+    fun provideRealtimeDBRoomsRef(): DatabaseReference = Firebase.database.getReference(DB_ROOMS)
+
+    @Provides
+    @Singleton
+    @Named(DB_PENGAJUAN)
+    fun provideRealtimeDBPeminjamanRef(): DatabaseReference = Firebase.database.getReference(DB_PENGAJUAN)
 }

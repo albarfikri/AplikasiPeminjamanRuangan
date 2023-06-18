@@ -3,6 +3,8 @@ package com.example.aplikasipeminjamanruangan.di
 import com.example.aplikasipeminjamanruangan.data.remote.firebase.RealtimeDB
 import com.example.aplikasipeminjamanruangan.presentation.utils.BASE_URL_IMAGE_DETECTION
 import com.example.aplikasipeminjamanruangan.presentation.utils.BASE_URL_PCR
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
 import com.example.aplikasipeminjamanruangan.presentation.utils.URL_IMAGE_DETECTION
 import com.example.aplikasipeminjamanruangan.presentation.utils.URL_PCR
 import com.google.firebase.database.DatabaseReference
@@ -23,8 +25,11 @@ import javax.inject.Singleton
 class AppModules {
     @Provides
     @Singleton
-    fun provideRepository(reference: DatabaseReference): RealtimeDB =
-        RealtimeDB(dbReference = reference)
+    fun provideRepository(
+        @Named(DB_ROOMS) referenceDbRooms: DatabaseReference,
+        @Named(DB_PENGAJUAN) referenceDbPengajuan: DatabaseReference
+    ): RealtimeDB =
+        RealtimeDB(dbRoomsReference = referenceDbRooms, dbPengajuanReference = referenceDbPengajuan)
 
     @Provides
     @Singleton

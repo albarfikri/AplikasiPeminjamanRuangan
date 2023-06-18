@@ -22,7 +22,6 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -52,7 +50,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.rounded.Add
@@ -88,6 +85,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.aplikasipeminjamanruangan.R
+import com.example.aplikasipeminjamanruangan.presentation.components.home.TopAppBar
 import com.example.aplikasipeminjamanruangan.presentation.states.CameraXState
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitNimValidation
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitTextDetectionState
@@ -119,6 +117,7 @@ fun LendingScreen(
     sharedViewModel: SharedViewModel,
     retrofitViewModel: RetrofitViewModel,
     onNavBack: () -> Unit,
+    onNextPage: () -> Unit,
     modifier: Modifier
 ) {
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
@@ -168,8 +167,6 @@ fun LendingScreen(
         if (!isCameraLaunched) {
             MultiFloatingButton(multiFloatingState = multiFloatingState, onMultiFabStateChange = {
                 multiFloatingState = it
-            }, onItemClick = {
-
             }, onMinFabItemClick = { minFabItem ->
                 retrofitViewModel.deleteData()
                 when (minFabItem.identifier) {
@@ -204,8 +201,12 @@ fun LendingScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             ) {
-                TopAppBar(onNavBack = onNavBack, modifier = modifier)
-
+                TopAppBar(
+                    onNavBack = onNavBack,
+                    modifier = modifier,
+                    bigText = "KTM",
+                    smallText = "Pinjam dengan"
+                )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier.padding(top = 24.dp)
@@ -232,7 +233,7 @@ fun LendingScreen(
 
                     if (isNimValid.data != null && !isTextDetected.isLoading && !isTextDetected.data?.nim.isNullOrEmpty()) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        FinalVerificationStatus(isNimValid = isNimValid)
+                        FinalVerificationStatus(isNimValid = isNimValid, onNextPage = onNextPage)
                     }
                 }
             }
@@ -241,52 +242,10 @@ fun LendingScreen(
 }
 
 @Composable
-fun TopAppBar(onNavBack: () -> Unit, modifier: Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(
-            onClick = { onNavBack() }, modifier = Modifier
-                .clip(
-                    CircleShape
-                )
-                .background(MaterialTheme.colors.background)
-                .border(
-                    width = 2.dp, shape = CircleShape, color = MaterialTheme.colors.secondary
-                )
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack, contentDescription = "", tint = Color.White
-            )
-        }
-        //Spacer(modifier = Modifier.padding(start = 28.dp))
-        Text(
-            color = MaterialTheme.colors.onPrimary,
-            text = buildAnnotatedString {
-                append("Pinjam dengan ")
-                withStyle(
-                    style = SpanStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                ) {
-                    append("KTM")
-                }
-            },
-            style = MaterialTheme.typography.body1,
-            fontSize = 16.sp,
-            modifier = modifier.padding(start = 24.dp)
-        )
-    }
-}
-
-@Composable
 fun MultiFloatingButton(
     multiFloatingState: MultiFloatingState,
     onMultiFabStateChange: (MultiFloatingState) -> Unit,
     onMinFabItemClick: (MinFabItem) -> Unit,
-    onItemClick: () -> Unit,
     items: List<MinFabItem>,
 ) {
     val transition = updateTransition(targetState = multiFloatingState, label = "transition")
@@ -480,7 +439,10 @@ fun ShowingImageAndStatusOutput(
 }
 
 @Composable
-fun FinalVerificationStatus(isNimValid: RetrofitNimValidation) {
+fun FinalVerificationStatus(
+    isNimValid: RetrofitNimValidation,
+    onNextPage: () -> Unit
+) {
     Card(
         elevation = 10.dp, modifier = Modifier
             .clip(RoundedCornerShape(18.dp))
@@ -551,7 +513,7 @@ fun FinalVerificationStatus(isNimValid: RetrofitNimValidation) {
                 }
                 Button(
                     onClick = {
-
+                        onNextPage()
                     },
                     border = BorderStroke(1.dp, Color.White),
                     modifier = Modifier.fillMaxWidth(),

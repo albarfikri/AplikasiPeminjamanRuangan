@@ -11,9 +11,11 @@ import androidx.navigation.compose.composable
 import com.example.aplikasipeminjamanruangan.presentation.screen.SplashScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeDetailScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeScreen
+import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingFormScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingScreen
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.CameraXViewModel
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
 
@@ -23,6 +25,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val sharedViewModel: SharedViewModel = viewModel()
     val cameraXViewModel: CameraXViewModel = hiltViewModel()
     val retrofitViewModel: RetrofitViewModel = hiltViewModel()
+    val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
 
     NavHost(
         navController = navController, startDestination = Splash.route, modifier = modifier
@@ -60,6 +63,27 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                 retrofitViewModel = retrofitViewModel,
                 onNavBack = {
                     navController.popBackStack()
+                },
+                onNextPage = {
+                    navController.navigateSingleTopTo(LendingForm.route)
+                },
+                modifier = modifier
+            )
+        }
+
+        composable(route = LendingForm.route) {
+            LendingFormScreen(
+                sharedViewModel = sharedViewModel,
+                retrofitViewModel = retrofitViewModel,
+                pengajuanViewModel = pengajuanViewModel,
+                onPinjamRuangan = { dataPengajuan ->
+                    pengajuanViewModel.insertPengajuan(dataPengajuan)
+                },
+                onNavBack = {
+                    navController.popBackStack()
+                },
+                onActionClick = {
+                    navController.navigateSingleTopTo(Home.route)
                 },
                 modifier = modifier
             )

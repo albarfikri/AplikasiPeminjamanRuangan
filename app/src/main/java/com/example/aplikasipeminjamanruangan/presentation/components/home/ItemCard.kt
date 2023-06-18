@@ -72,9 +72,6 @@ fun ItemCard(
                     )
                 }
             }
-//            OutlinedButton(onClick = { /*TODO*/ }, modifier = modifier.padding(start = 2.dp)) {
-//                Text(text = "Detail")
-//            }
         }
     }
 }

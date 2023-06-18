@@ -5,7 +5,9 @@ const val SECOND_FLOOR = "Lantai 2"
 const val THIRD_FLOOR = "Lantai 3"
 
 // Firebase Realtime Database
-const val DB_REFERENCES = "rooms"
+const val DB_ROOMS = "rooms"
+const val DB_PENGAJUAN = "pengajuan"
+const val DB_PEMINJAMAN = "peminjaman"
 
 // Swipping collapsing layout state
 enum class SwipingStates {

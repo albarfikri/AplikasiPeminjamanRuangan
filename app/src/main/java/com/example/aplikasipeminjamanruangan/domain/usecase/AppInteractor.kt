@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.CameraXModel
+import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
@@ -35,4 +36,7 @@ class AppInteractor @Inject constructor(
 
     override suspend fun verifiedNim(nim: String): Flow<Resource<RetrofitPcrModel>> =
         appRepository.verifiedNim(nim)
+
+    override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
+        appRepository.insertPengajuan(data)
 }

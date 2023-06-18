@@ -4,6 +4,7 @@ import com.example.aplikasipeminjamanruangan.BuildConfig
 import com.example.aplikasipeminjamanruangan.data.remote.firebase.RealtimeDB
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apiimagedetector.FileApi
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apipcr.FilePcrApi
+import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
@@ -72,4 +73,7 @@ class AppRepository @Inject constructor(
                 emit(Resource.Error(Throwable(e.message())))
             }
         }.flowOn(Dispatchers.IO)
+
+    override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
+        realtimeDB.insertPengajuan(data)
 }

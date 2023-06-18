@@ -23,6 +23,7 @@ import com.example.aplikasipeminjamanruangan.presentation.navigation.Home
 import com.example.aplikasipeminjamanruangan.presentation.navigation.HomeBottomNavBar
 import com.example.aplikasipeminjamanruangan.presentation.navigation.HomeDetail
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Lending
+import com.example.aplikasipeminjamanruangan.presentation.navigation.LendingForm
 import com.example.aplikasipeminjamanruangan.presentation.navigation.NavGraph
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Splash
 import com.example.aplikasipeminjamanruangan.presentation.navigation.listOfTabScreen
@@ -56,7 +57,10 @@ class MainActivity : ComponentActivity() {
 
             Scaffold(bottomBar = {
                 AnimatedVisibility(
-                    visible = currentDestination?.route != Splash.route && currentDestination?.route != HomeDetail.route && currentDestination?.route != Lending.route
+                    visible = currentDestination?.route != Splash.route &&
+                            currentDestination?.route != HomeDetail.route
+                            && currentDestination?.route != Lending.route &&
+                            currentDestination?.route != LendingForm.route
                 ) {
                     bottomBar(navBackStackEntry = currentBackStack, navController = navController)
                 }
