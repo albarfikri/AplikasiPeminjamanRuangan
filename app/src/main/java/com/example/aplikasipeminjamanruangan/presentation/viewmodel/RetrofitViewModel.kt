@@ -27,6 +27,23 @@ class RetrofitViewModel @Inject constructor(
 
     fun deleteData() = _isNimValid.update { it.copy(data = null) }
 
+    fun resetRetrofitData() {
+        _isTextDetected.update {
+            it.copy(
+                data = null,
+                isLoading = false,
+                errMsg = null
+            )
+        }
+        _isNimValid.update{
+            it.copy(
+                data = null,
+                isLoading = false,
+                errMsg = null
+            )
+        }
+    }
+
     fun uploadImage(file: File) = viewModelScope.launch {
         appUseCase.getImageResult(file).collect { result ->
             when (result) {

@@ -8,7 +8,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.aplikasipeminjamanruangan.presentation.screen.HistoryScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.SplashScreen
+import com.example.aplikasipeminjamanruangan.presentation.screen.WaitingScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeDetailScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingFormScreen
@@ -76,13 +78,17 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                 sharedViewModel = sharedViewModel,
                 retrofitViewModel = retrofitViewModel,
                 pengajuanViewModel = pengajuanViewModel,
-                onPinjamRuangan = { dataPengajuan ->
+                onPinjamRuangan = { dataPengajuan, roomsUpdate ->
                     pengajuanViewModel.insertPengajuan(dataPengajuan)
+                    appViewModel.updateRooms(roomsUpdate)
                 },
                 onNavBack = {
                     navController.popBackStack()
                 },
                 onActionClick = {
+                    sharedViewModel.resetRoomsData()
+                    retrofitViewModel.resetRetrofitData()
+                    pengajuanViewModel.resetPengajuanViewModel()
                     navController.navigateSingleTopTo(Home.route)
                 },
                 modifier = modifier
@@ -90,9 +96,10 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
         }
 
         composable(route = WaitingList.route) {
-
+            WaitingScreen(pengajuanViewModel = pengajuanViewModel)
         }
         composable(route = History.route) {
+            HistoryScreen()
         }
     }
 }

@@ -31,6 +31,7 @@ class AppRepository @Inject constructor(
     @Named(URL_PCR) private val retrofitUrlPcr: Retrofit
 ) : IAppRepository {
     override suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = realtimeDB.getRooms()
+    override suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> = realtimeDB.updateRooms(roomsModel)
     override suspend fun getImageResult(file: File): Flow<Resource<RetrofitImageModel>> =
         flow {
             emit(Resource.Loading)
@@ -76,4 +77,6 @@ class AppRepository @Inject constructor(
 
     override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
         realtimeDB.insertPengajuan(data)
+
+    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> = realtimeDB.getPengajuan()
 }

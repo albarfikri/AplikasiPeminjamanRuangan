@@ -1,35 +1,37 @@
 package com.example.aplikasipeminjamanruangan.presentation.screen.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.presentation.components.home.ItemCard
+import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.presentation.utils.AnimateShimmer
 import com.example.aplikasipeminjamanruangan.presentation.utils.FIRST_FLOOR
 import com.example.aplikasipeminjamanruangan.presentation.utils.SECOND_FLOOR
@@ -44,7 +46,6 @@ fun HomeScreen(
     modifier: Modifier
 ) {
     val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
-
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
@@ -63,8 +64,9 @@ fun HomeScreen(
                 append("Mahasiswa")
             }
         })
-        CardFeature(modifier = modifier)
-        Spacer(modifier = modifier.size(1.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        CardFeature(modifier = Modifier)
+        Spacer(modifier = Modifier.height(8.dp))
         when {
             roomsState.isLoading -> {
                 FloorDescription(floorName = "I")
@@ -103,7 +105,6 @@ fun HomeScreen(
                 )
             }
         }
-
     }
 }
 
@@ -114,9 +115,7 @@ fun SpreadingData(
     floor: String,
     modifier: Modifier
 ) {
-    LazyRow(
-
-    ) {
+    LazyVerticalGrid(columns = GridCells.Adaptive(80.dp), content = {
         items(roomsState.data!!) { data ->
             if (data?.lantai_ruangan.equals(floor)) {
                 ListRoomBasedOnFloor(
@@ -126,7 +125,8 @@ fun SpreadingData(
                 )
             }
         }
-    }
+    },
+    modifier=  Modifier.height(285.dp), horizontalArrangement = Arrangement.Start)
 }
 
 
@@ -134,13 +134,26 @@ fun SpreadingData(
 fun CardFeature(modifier: Modifier) {
     Card(
         modifier = modifier
-            .clip(RoundedCornerShape(10))
-            .fillMaxWidth(),
-        elevation = 10.dp,
+            .clip(
+                CutCornerShape(
+                    topStart = 8.dp,
+                    topEnd = 0.dp,
+                    bottomStart = 0.dp,
+                    bottomEnd = 8.dp
+                )
+            )
+            .fillMaxSize(),
+        elevation = 20.dp,
         backgroundColor = MaterialTheme.colors.secondary
     ) {
-        Row(modifier = modifier) {
-        }
+        Text(
+            text = "\"Mau pinjam ruangan apa hari ini ?\"",
+            fontSize = 16.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = modifier.padding(12.dp)
+        )
     }
 }
 

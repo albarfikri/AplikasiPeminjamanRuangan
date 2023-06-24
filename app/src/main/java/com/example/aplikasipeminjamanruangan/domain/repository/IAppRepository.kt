@@ -10,7 +10,9 @@ import java.io.File
 
 interface IAppRepository {
     suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>>
+    suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>>
     suspend fun getImageResult(file: File): Flow<Resource<RetrofitImageModel>>
     suspend fun verifiedNim(nim: String): Flow<Resource<RetrofitPcrModel>>
     suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>>
+    suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>>
 }

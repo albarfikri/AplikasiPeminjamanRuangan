@@ -81,7 +81,7 @@ fun LendingFormScreen(
     sharedViewModel: SharedViewModel,
     retrofitViewModel: RetrofitViewModel,
     pengajuanViewModel: PengajuanViewModel,
-    onPinjamRuangan: (PengajuanModel) -> Unit,
+    onPinjamRuangan: (PengajuanModel, RoomsModel) -> Unit,
     onNavBack: () -> Unit,
     onActionClick: () -> Unit,
     modifier: Modifier
@@ -94,9 +94,13 @@ fun LendingFormScreen(
     val snackBarCoroutineScope = rememberCoroutineScope()
     val snackState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val flag = rememberSaveable {
+        mutableStateOf(true)
+    }
 
-    if (pengajuanState.data != null) {
+    if (pengajuanState.data != null && flag.value) {
         Toast.makeText(context, "${pengajuanState.data}", Toast.LENGTH_LONG).show()
+        flag.value = false
     }
 
     if (pengajuanState.errMsg != null) {
@@ -138,7 +142,7 @@ fun LendingForm(
     roomData: RoomsModel,
     retrofitData: RetrofitNimValidation,
     pengajuanState: RealtimeDBPengajuanState,
-    onPinjamRuangan: (PengajuanModel) -> Unit,
+    onPinjamRuangan: (PengajuanModel, RoomsModel) -> Unit,
     onActionClick: () -> Unit,
     context: Context
 ) {
@@ -390,7 +394,17 @@ fun LendingForm(
                                 nim = nimValue,
                                 prodi = prodiValue,
                                 ruangan = ruanganValue,
-                                tanggal = tanggalValue
+                                tanggal = tanggalValue,
+                                fotoRuangan = roomData.foto_ruangan
+                            ),
+                            RoomsModel(
+                                deskripsi_ruangan = roomData.deskripsi_ruangan,
+                                fasilitas_ruangan = roomData.fasilitas_ruangan,
+                                foto_ruangan = roomData.foto_ruangan,
+                                id_ruangan = roomData.id_ruangan,
+                                isLent = true,
+                                lantai_ruangan = roomData.lantai_ruangan,
+                                nama_ruangan = roomData.nama_ruangan
                             )
                         )
                     }

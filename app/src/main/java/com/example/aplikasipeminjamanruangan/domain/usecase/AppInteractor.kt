@@ -20,6 +20,9 @@ class AppInteractor @Inject constructor(
     private val customCameraRepository: ICustomCameraRepository
 ) : IAppUseCase {
     override suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = appRepository.getRooms()
+    override suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> =
+        appRepository.updateRooms(roomsModel)
+
     override suspend fun captureAndSaveImage(context: Context): Flow<Resource<CameraXModel>> =
         customCameraRepository.captureAndSaveImage(context)
 
@@ -39,4 +42,6 @@ class AppInteractor @Inject constructor(
 
     override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
         appRepository.insertPengajuan(data)
+
+    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> = appRepository.getPengajuan()
 }

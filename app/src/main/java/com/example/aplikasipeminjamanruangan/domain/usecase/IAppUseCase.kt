@@ -15,6 +15,7 @@ import java.io.File
 
 interface IAppUseCase {
     suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>>
+    suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>>
     suspend fun captureAndSaveImage(context:Context): Flow<Resource<CameraXModel>>
     suspend fun showCameraPreview(
         previewView: PreviewView,
@@ -23,4 +24,5 @@ interface IAppUseCase {
     suspend fun getImageResult(file: File): Flow<Resource<RetrofitImageModel>>
     suspend fun verifiedNim(nim: String): Flow<Resource<RetrofitPcrModel>>
     suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>>
+    suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>>
 }

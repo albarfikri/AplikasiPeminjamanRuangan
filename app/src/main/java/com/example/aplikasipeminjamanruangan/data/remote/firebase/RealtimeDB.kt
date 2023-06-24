@@ -23,6 +23,7 @@ class RealtimeDB @Inject constructor(
     suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = callbackFlow {
         trySend(Resource.Loading)
         dbRoomsReference.keepSynced(true)
+        dbRoomsReference.orderByChild("nama_ruangan")
         val event = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val rooms = snapshot.children.map { dataSnapshot ->
@@ -39,6 +40,34 @@ class RealtimeDB @Inject constructor(
         awaitClose { close() }
     }
 
+    suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> = callbackFlow {
+        trySend(Resource.Loading)
+        val data = toMap(roomsModel)
+
+        dbRoomsReference.child(roomsModel.id_ruangan.toString()).updateChildren(
+            data
+        ).addOnCompleteListener {
+            trySend(Resource.Success("Update Succesfully"))
+        }.addOnFailureListener {
+            trySend(Resource.Error(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    private fun toMap(roomsModel: RoomsModel): Map<String, Any?> {
+        return mapOf(
+            "deskripsi_ruangan" to roomsModel.deskripsi_ruangan,
+            "fasilitas_ruangan" to roomsModel.fasilitas_ruangan,
+            "foto_ruangan" to roomsModel.foto_ruangan,
+            "id_ruangan" to roomsModel.id_ruangan,
+            "isLent" to roomsModel.isLent,
+            "lantai_ruangan" to roomsModel.lantai_ruangan,
+            "nama_ruangan" to roomsModel.nama_ruangan
+        )
+    }
+
     suspend fun insertPengajuan(item: PengajuanModel): Flow<Resource<String>> = callbackFlow {
         trySend(Resource.Loading)
         dbPengajuanReference.push().setValue(
@@ -52,5 +81,25 @@ class RealtimeDB @Inject constructor(
         awaitClose {
             close()
         }
+    }
+
+    suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> = callbackFlow {
+        trySend(Resource.Loading)
+        dbPengajuanReference.keepSynced(true)
+        dbPengajuanReference.orderByKey()
+        val event = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val pengajuan = snapshot.children.map { dataSnapshot ->
+                    dataSnapshot.getValue<PengajuanModel>()
+                }
+                trySend(Resource.Success(pengajuan))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Resource.Error(Throwable(error.message)))
+            }
+        }
+        dbPengajuanReference.addValueEventListener(event)
+        awaitClose { close() }
     }
 }
