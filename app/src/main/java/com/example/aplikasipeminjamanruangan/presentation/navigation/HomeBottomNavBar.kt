@@ -33,8 +33,8 @@ fun HomeBottomNavBar(
         backgroundColor = MaterialTheme.colors.secondary,
         modifier = Modifier.clip(
             RoundedCornerShape(
-                topStart = 16.dp,
-                topEnd = 16.dp,
+                topStart = 24.dp,
+                topEnd = 24.dp,
             )
         )
     ) {

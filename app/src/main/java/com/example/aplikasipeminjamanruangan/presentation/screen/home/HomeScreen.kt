@@ -19,6 +19,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.SpanStyle
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.presentation.components.home.ItemCard
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
@@ -41,11 +43,11 @@ import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 
 @Composable
 fun HomeScreen(
-    roomsState: RealtimeDBRoomsState,
     appViewModel: AppViewModel,
     onHeadingToDetail: (RoomsModelMain) -> Unit,
     modifier: Modifier
 ) {
+    val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
@@ -170,8 +172,7 @@ fun CardFeature(modifier: Modifier) {
         Text(
             text = "\"Mau pinjam ruangan apa hari ini ?\"",
             fontSize = 16.sp,
-            color = textColor,
-            fontWeight = FontWeight.Bold,
+            color = textColor ,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(12.dp)
         )

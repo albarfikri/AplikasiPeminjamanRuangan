@@ -4,10 +4,10 @@ import com.example.aplikasipeminjamanruangan.BuildConfig
 import com.example.aplikasipeminjamanruangan.data.remote.firebase.RealtimeDB
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apiimagedetector.FileApi
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apipcr.FilePcrApi
+import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
-import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.presentation.utils.COLLECTION
@@ -32,7 +32,9 @@ class AppRepository @Inject constructor(
     @Named(URL_PCR) private val retrofitUrlPcr: Retrofit
 ) : IAppRepository {
     override suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = realtimeDB.getRooms()
-    override suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> = realtimeDB.updateRooms(roomsModelMain)
+    override suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> =
+        realtimeDB.updateRooms(roomsModelMain)
+
     override suspend fun getImageResult(file: File): Flow<Resource<RetrofitImageModel>> =
         flow {
             emit(Resource.Loading)
@@ -79,5 +81,12 @@ class AppRepository @Inject constructor(
     override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
         realtimeDB.insertPengajuan(data)
 
-    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> = realtimeDB.getPengajuan()
+    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> =
+        realtimeDB.getPengajuan()
+
+    override suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>> =
+        realtimeDB.insertPeminjaman(data)
+
+    override suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>> =
+        realtimeDB.getPeminjaman()
 }

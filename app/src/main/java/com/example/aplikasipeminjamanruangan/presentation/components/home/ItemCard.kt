@@ -42,7 +42,7 @@ fun ItemCard(
             .clickable( onClick = {
                 onHeadingToDetail(item)
                 Toast
-                    .makeText(context, item.item?.isLent.toString(), Toast.LENGTH_SHORT)
+                    .makeText(context, item.item.isLent.toString(), Toast.LENGTH_SHORT)
                     .show()
             })
             .fillMaxWidth(), shape = RoundedCornerShape(16.dp),
@@ -54,17 +54,17 @@ fun ItemCard(
                     modifier = Modifier
                         .height(100.dp)
                         .weight(3f),
-                    model = ImageRequest.Builder(LocalContext.current).data(item.item?.foto_ruangan)
+                    model = ImageRequest.Builder(LocalContext.current).data(item.item.foto_ruangan)
                         .crossfade(true).build(),
                     placeholder = painterResource(id = R.drawable.loading_img),
                     error = painterResource(id = R.drawable.ic_broken_image),
-                    contentDescription = item.item?.nama_ruangan,
+                    contentDescription = item.item.nama_ruangan,
                     contentScale = ContentScale.Crop
                 )
 
                 Text(
                     color = Color.Black,
-                    text = item.item?.nama_ruangan!!,
+                    text = "${item.item.nama_ruangan!!} \n ${item.item.isLent}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,

@@ -5,10 +5,10 @@ import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.CameraXModel
+import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
-import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.domain.repository.ICustomCameraRepository
@@ -20,7 +20,9 @@ class AppInteractor @Inject constructor(
     private val appRepository: IAppRepository,
     private val customCameraRepository: ICustomCameraRepository
 ) : IAppUseCase {
-    override suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = appRepository.getRooms()
+    override suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> =
+        appRepository.getRooms()
+
     override suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> =
         appRepository.updateRooms(roomsModelMain)
 
@@ -44,5 +46,12 @@ class AppInteractor @Inject constructor(
     override suspend fun insertPengajuan(data: PengajuanModel): Flow<Resource<String>> =
         appRepository.insertPengajuan(data)
 
-    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> = appRepository.getPengajuan()
+    override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> =
+        appRepository.getPengajuan()
+
+    override suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>> =
+        appRepository.insertPeminjaman(data)
+
+    override suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>> =
+        appRepository.getPeminjaman()
 }

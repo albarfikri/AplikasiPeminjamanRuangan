@@ -1,10 +1,8 @@
 package com.example.aplikasipeminjamanruangan.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,6 +17,7 @@ import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingFor
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingScreen
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.CameraXViewModel
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PeminjamanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
@@ -30,7 +29,8 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val cameraXViewModel: CameraXViewModel = hiltViewModel()
     val retrofitViewModel: RetrofitViewModel = hiltViewModel()
     val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
-    val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
+    val peminjamanViewModel: PeminjamanViewModel = hiltViewModel()
+
 
     NavHost(
         navController = navController, startDestination = Splash.route, modifier = modifier
@@ -40,7 +40,6 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
         }
         composable(route = Home.route) {
             HomeScreen(
-                roomsState = roomsState,
                 appViewModel = appViewModel,
                 onHeadingToDetail = { room ->
                     sharedViewModel.addRooms(room)
@@ -103,7 +102,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
             WaitingScreen(pengajuanViewModel = pengajuanViewModel)
         }
         composable(route = History.route) {
-            HistoryScreen()
+            HistoryScreen(peminjamanViewModel = peminjamanViewModel)
         }
     }
 }

@@ -24,5 +24,11 @@ class RealtimeDBModule {
     @Provides
     @Singleton
     @Named(DB_PENGAJUAN)
-    fun provideRealtimeDBPeminjamanRef(): DatabaseReference = Firebase.database.getReference(DB_PENGAJUAN)
+    fun provideRealtimeDBPengajuanRef(): DatabaseReference = Firebase.database.getReference(DB_PENGAJUAN)
+
+    @Provides
+    @Singleton
+    @Named(DB_PEMINJAMAN)
+    fun provideRealtimeDBPeminjamanRef(): DatabaseReference = Firebase.database.getReference(
+        DB_PEMINJAMAN)
 }

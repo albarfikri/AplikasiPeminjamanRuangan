@@ -2,9 +2,11 @@ package com.example.aplikasipeminjamanruangan.data.remote.firebase
 
 import android.util.Log
 import com.example.aplikasipeminjamanruangan.data.Resource
+import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
 import com.google.firebase.database.DataSnapshot
@@ -21,10 +23,12 @@ import javax.inject.Named
 class RealtimeDB @Inject constructor(
     @Named(DB_ROOMS) private val dbRoomsReference: DatabaseReference,
     @Named(DB_PENGAJUAN) private val dbPengajuanReference: DatabaseReference,
+    @Named(DB_PEMINJAMAN) private val dbPeminjamanReference: DatabaseReference,
 ) {
     suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = callbackFlow {
         trySend(Resource.Loading)
         dbRoomsReference.keepSynced(true)
+        dbRoomsReference.orderByKey()
         val event = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -97,6 +101,41 @@ class RealtimeDB @Inject constructor(
             override fun onDataChange(snapshot: DataSnapshot) {
                 val pengajuan = snapshot.children.map { dataSnapshot ->
                     dataSnapshot.getValue<PengajuanModel>()
+                }
+                trySend(Resource.Success(pengajuan))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Resource.Error(Throwable(error.message)))
+            }
+        }
+        dbPengajuanReference.addValueEventListener(event)
+        awaitClose { close() }
+    }
+
+    suspend fun insertPeminjaman(item: PeminjamanModel): Flow<Resource<String>> = callbackFlow {
+        trySend(Resource.Loading)
+        dbPeminjamanReference.push().setValue(
+            item
+        ).addOnCompleteListener {
+            if (it.isSuccessful)
+                trySend(Resource.Success("Data inserted Successfully.."))
+        }.addOnFailureListener {
+            trySend(Resource.Error(it))
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+    suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>> = callbackFlow {
+        trySend(Resource.Loading)
+        dbPeminjamanReference.keepSynced(true)
+        dbPeminjamanReference.orderByKey()
+        val event = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val pengajuan = snapshot.children.map { dataSnapshot ->
+                    dataSnapshot.getValue<PeminjamanModel>()
                 }
                 trySend(Resource.Success(pengajuan))
             }

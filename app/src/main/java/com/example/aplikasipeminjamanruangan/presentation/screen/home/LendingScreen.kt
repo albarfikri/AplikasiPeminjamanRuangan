@@ -676,7 +676,7 @@ fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
 }
 
 @Composable
-private fun ItemButton(
+fun ItemButton(
     onClick: () -> Unit, onExpanded: Boolean, modifier: Modifier
 ) {
     IconButton(onClick = { onClick() }) {
