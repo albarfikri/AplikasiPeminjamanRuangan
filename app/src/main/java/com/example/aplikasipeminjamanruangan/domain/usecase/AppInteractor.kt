@@ -9,6 +9,7 @@ import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.domain.repository.ICustomCameraRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +20,9 @@ class AppInteractor @Inject constructor(
     private val appRepository: IAppRepository,
     private val customCameraRepository: ICustomCameraRepository
 ) : IAppUseCase {
-    override suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = appRepository.getRooms()
-    override suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> =
-        appRepository.updateRooms(roomsModel)
+    override suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = appRepository.getRooms()
+    override suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> =
+        appRepository.updateRooms(roomsModelMain)
 
     override suspend fun captureAndSaveImage(context: Context): Flow<Resource<CameraXModel>> =
         customCameraRepository.captureAndSaveImage(context)

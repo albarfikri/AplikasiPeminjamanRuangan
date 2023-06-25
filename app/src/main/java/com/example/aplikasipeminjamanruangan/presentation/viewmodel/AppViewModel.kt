@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.usecase.IAppUseCase
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDbUpdateRoomsState
@@ -59,8 +60,8 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    fun updateRooms(roomModel: RoomsModel) = viewModelScope.launch {
-        AppUseCase.updateRooms(roomModel).collect {result ->
+    fun updateRooms(roomsModelMain: RoomsModelMain) = viewModelScope.launch {
+        AppUseCase.updateRooms(roomsModelMain).collect {result ->
             when (result) {
                 is Resource.Loading -> {
                     _updateState.update { it.copy(data = null, isLoading = true, errMsg = null) }

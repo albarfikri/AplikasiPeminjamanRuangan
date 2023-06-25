@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -61,7 +62,9 @@ import coil.request.ImageRequest
 import com.example.aplikasipeminjamanruangan.R
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.presentation.utils.SwipingStates
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -71,6 +74,7 @@ fun HomeDetailScreen(
     onLending: (RoomsModel) -> Unit,
     modifier: Modifier
 ) {
+
     val data = sharedViewModel.sharedStated.collectAsStateWithLifecycle().value
 
     val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
@@ -189,9 +193,9 @@ fun HomeDetailScreen(
                     startHeightNum = startHeightNum,
                     swipingState = swipingState,
                     onNavBack = { onNavBack() },
-                    data = data
+                    data = data.data?.item!!
                 )
-                BottomSection(data = data, onLending = onLending)
+                BottomSection(data = data.data?.item!!, onLending = onLending)
             }
         }
     }
@@ -254,18 +258,18 @@ fun TopSection(
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "",
-            tint = Color.White
+            tint = textColor
         )
     }
 
     Text(
         text = "${data.nama_ruangan}",
-        color = Color.White,
+        color = textColor,
 
         modifier = Modifier
             .layoutId("content2")
             .clip(
-                RoundedCornerShape(10.dp)
+                CutCornerShape(topStart = 10.dp, bottomEnd = 10.dp)
             )
             .background(
                 when (swipingState.progress.to) {
@@ -290,16 +294,16 @@ fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Fasilitas", style = MaterialTheme.typography.h2, color = Color.White)
-            Text(text = "${data.fasilitas_ruangan}", color = Color.White)
+            Text(text = "Fasilitas", style = MaterialTheme.typography.h2, color = textColor)
+            Text(text = "${data.fasilitas_ruangan}", color = textColor)
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Deskripsi", style = MaterialTheme.typography.h2, color = Color.White)
-            Text(text = "${data.deskripsi_ruangan}", color = Color.White)
+            Text(text = "Deskripsi", style = MaterialTheme.typography.h2, color = textColor)
+            Text(text = "${data.deskripsi_ruangan}", color = textColor)
             Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Lantai", style = MaterialTheme.typography.h2, color = Color.White)
+            Text(text = "Lantai", style = MaterialTheme.typography.h2, color = textColor)
             Text(
                 text = "${data.lantai_ruangan}",
-                color = Color.White
+                color = textColor
             )
             Spacer(modifier = Modifier.height(18.dp))
             Button(
@@ -309,9 +313,9 @@ fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(6.dp),
                 shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
-                Text("Pinjam", color = Color.White, style = MaterialTheme.typography.body1)
+                Text("Pinjam", color = textColor, style = MaterialTheme.typography.body1)
             }
         }
     }

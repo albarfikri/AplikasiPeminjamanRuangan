@@ -10,12 +10,13 @@ import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface IAppUseCase {
-    suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>>
-    suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>>
+    suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>>
+    suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>>
     suspend fun captureAndSaveImage(context:Context): Flow<Resource<CameraXModel>>
     suspend fun showCameraPreview(
         previewView: PreviewView,

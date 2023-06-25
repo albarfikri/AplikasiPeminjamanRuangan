@@ -61,12 +61,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.presentation.components.Calendar
 import com.example.aplikasipeminjamanruangan.presentation.components.Clock
 import com.example.aplikasipeminjamanruangan.presentation.components.ListDialog
 import com.example.aplikasipeminjamanruangan.presentation.components.home.TopAppBar
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBPengajuanState
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitNimValidation
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
@@ -81,7 +83,7 @@ fun LendingFormScreen(
     sharedViewModel: SharedViewModel,
     retrofitViewModel: RetrofitViewModel,
     pengajuanViewModel: PengajuanViewModel,
-    onPinjamRuangan: (PengajuanModel, RoomsModel) -> Unit,
+    onPinjamRuangan: (PengajuanModel, RoomsModelMain) -> Unit,
     onNavBack: () -> Unit,
     onActionClick: () -> Unit,
     modifier: Modifier
@@ -115,7 +117,7 @@ fun LendingFormScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             TopAppBar(
-                onNavBack = onNavBack, modifier = modifier, smallText = "Form Peminjaman Ruangan"
+                onNavBack = onNavBack, modifier = modifier, bigText = "Form", smallText = "Peminjaman Ruangan"
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -123,7 +125,7 @@ fun LendingFormScreen(
             ) {
                 LendingForm(
                     modifier = modifier,
-                    roomData = data,
+                    roomsModelMain = data.data!!,
                     retrofitData = dataRetrofit,
                     pengajuanState = pengajuanState,
                     onPinjamRuangan = onPinjamRuangan,
@@ -139,10 +141,10 @@ fun LendingFormScreen(
 @Composable
 fun LendingForm(
     modifier: Modifier,
-    roomData: RoomsModel,
+    roomsModelMain: RoomsModelMain,
     retrofitData: RetrofitNimValidation,
     pengajuanState: RealtimeDBPengajuanState,
-    onPinjamRuangan: (PengajuanModel, RoomsModel) -> Unit,
+    onPinjamRuangan: (PengajuanModel, RoomsModelMain) -> Unit,
     onActionClick: () -> Unit,
     context: Context
 ) {
@@ -189,7 +191,7 @@ fun LendingForm(
                 prodiValue = it.prodi.toString()
             }
 
-            ruanganValue = roomData.nama_ruangan!!
+            ruanganValue = roomsModelMain.item?.nama_ruangan!!
 
             if (isCalendarClicked) {
                 calendarState.show()
@@ -224,7 +226,7 @@ fun LendingForm(
 
             ListDialog(listState = facilityState, listDialogValue = {
                 fasilitasValue = it
-            }, roomData = roomData)
+            }, roomData = roomsModelMain.item!!)
 
             OutlinedTextField(
                 value = namaValue,
@@ -395,16 +397,19 @@ fun LendingForm(
                                 prodi = prodiValue,
                                 ruangan = ruanganValue,
                                 tanggal = tanggalValue,
-                                fotoRuangan = roomData.foto_ruangan
+                                fotoRuangan = roomsModelMain.item?.foto_ruangan
                             ),
-                            RoomsModel(
-                                deskripsi_ruangan = roomData.deskripsi_ruangan,
-                                fasilitas_ruangan = roomData.fasilitas_ruangan,
-                                foto_ruangan = roomData.foto_ruangan,
-                                id_ruangan = roomData.id_ruangan,
-                                isLent = true,
-                                lantai_ruangan = roomData.lantai_ruangan,
-                                nama_ruangan = roomData.nama_ruangan
+                            RoomsModelMain(
+                                key = roomsModelMain.key,
+                                item = RoomsModel(
+                                    deskripsi_ruangan = roomsModelMain.item?.deskripsi_ruangan,
+                                    fasilitas_ruangan = roomsModelMain.item?.fasilitas_ruangan,
+                                    foto_ruangan = roomsModelMain.item?.foto_ruangan,
+                                    id_ruangan = roomsModelMain.item?.id_ruangan,
+                                    isLent = true,
+                                    lantai_ruangan = roomsModelMain.item?.lantai_ruangan,
+                                    nama_ruangan = roomsModelMain.item?.nama_ruangan
+                                )
                             )
                         )
                     }
@@ -425,7 +430,7 @@ fun LendingForm(
                 } else {
                     Text(
                         "Pinjam Ruangan",
-                        color = Color.White,
+                        color = textColor,
                         style = MaterialTheme.typography.body1
                     )
                 }

@@ -2,28 +2,35 @@ package com.example.aplikasipeminjamanruangan.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
+import com.example.aplikasipeminjamanruangan.presentation.states.SharedViewModelState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class SharedViewModel : ViewModel() {
-    private var _sharedState = MutableStateFlow(RoomsModel())
+    private var _sharedState = MutableStateFlow(SharedViewModelState())
     val sharedStated = _sharedState.asStateFlow()
 
-    fun addRooms(roomsModel: RoomsModel) {
-        _sharedState.value = roomsModel
+    fun addRooms(rooms: RoomsModelMain) {
+        _sharedState.value.data = rooms
     }
 
     fun resetRoomsData() {
         _sharedState.update {
             it.copy(
-                deskripsi_ruangan = null,
-                fasilitas_ruangan = null,
-                foto_ruangan = null,
-                id_ruangan = 0,
-                isLent = false,
-                lantai_ruangan = null,
-                nama_ruangan = null
+                it.data?.copy(
+                    key = it.data!!.key,
+                    item = RoomsModel(
+                        deskripsi_ruangan = null,
+                        fasilitas_ruangan = null,
+                        foto_ruangan = null,
+                        id_ruangan = 0,
+                        isLent = false,
+                        lantai_ruangan = null,
+                        nama_ruangan = null
+                    )
+                )
             )
         }
     }

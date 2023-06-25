@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 
 @Composable
 fun TopAppBar(onNavBack: () -> Unit, bigText: String = "", smallText: String = "",  modifier: Modifier) {
@@ -39,22 +40,22 @@ fun TopAppBar(onNavBack: () -> Unit, bigText: String = "", smallText: String = "
                 )
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack, contentDescription = "", tint = Color.White
+                imageVector = Icons.Default.ArrowBack, contentDescription = "", tint = textColor
             )
         }
         //Spacer(modifier = Modifier.padding(start = 28.dp))
         Text(
-            color = MaterialTheme.colors.onPrimary,
+            color = textColor,
             text = buildAnnotatedString {
                 append("$smallText ")
                 withStyle(
                     style = SpanStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colors.onPrimary
+                        color = textColor
                     )
                 ) {
-                    append("$bigText")
+                    append(bigText)
                 }
             },
             style = MaterialTheme.typography.body1,

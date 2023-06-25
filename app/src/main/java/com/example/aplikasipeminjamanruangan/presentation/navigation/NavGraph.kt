@@ -1,8 +1,10 @@
 package com.example.aplikasipeminjamanruangan.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -28,6 +30,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val cameraXViewModel: CameraXViewModel = hiltViewModel()
     val retrofitViewModel: RetrofitViewModel = hiltViewModel()
     val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
+    val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController, startDestination = Splash.route, modifier = modifier
@@ -37,6 +40,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
         }
         composable(route = Home.route) {
             HomeScreen(
+                roomsState = roomsState,
                 appViewModel = appViewModel,
                 onHeadingToDetail = { room ->
                     sharedViewModel.addRooms(room)

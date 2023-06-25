@@ -1,5 +1,6 @@
 package com.example.aplikasipeminjamanruangan.presentation.components.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,46 +26,51 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.aplikasipeminjamanruangan.R
-import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 
 @Composable
 fun ItemCard(
-    item: RoomsModel,
-    onHeadingToDetail: (RoomsModel) -> Unit,
-    modifier: Modifier
+    item: RoomsModelMain, onHeadingToDetail: (RoomsModelMain) -> Unit, modifier: Modifier
 ) {
+    val context = LocalContext.current
     Card(
+        backgroundColor = if(item.item?.isLent!!) Color.Black else Color.White,
         modifier = Modifier
             .height(140.dp)
             .width(95.dp)
             .padding(4.dp)
-            .clickable { onHeadingToDetail(item) }
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = 14.dp
+            .clickable( onClick = {
+                onHeadingToDetail(item)
+                Toast
+                    .makeText(context, item.item?.isLent.toString(), Toast.LENGTH_SHORT)
+                    .show()
+            })
+            .fillMaxWidth(), shape = RoundedCornerShape(16.dp), elevation = 14.dp
     ) {
         Box {
             Column {
                 AsyncImage(
-                    modifier = Modifier.height(100.dp).weight(3f),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.foto_ruangan)
-                        .crossfade(true)
-                        .build(),
+                    modifier = Modifier
+                        .height(100.dp)
+                        .weight(3f),
+                    model = ImageRequest.Builder(LocalContext.current).data(item.item?.foto_ruangan)
+                        .crossfade(true).build(),
                     placeholder = painterResource(id = R.drawable.loading_img),
                     error = painterResource(id = R.drawable.ic_broken_image),
-                    contentDescription = item.nama_ruangan,
+                    contentDescription = item.item?.nama_ruangan,
                     contentScale = ContentScale.Crop
                 )
 
                 Text(
                     color = Color.Black,
-                    text = item.nama_ruangan!!,
+                    text = item.item?.nama_ruangan!!,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     style = MaterialTheme.typography.body1
                 )
             }

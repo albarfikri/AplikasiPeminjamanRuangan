@@ -1,8 +1,10 @@
 package com.example.aplikasipeminjamanruangan.data.remote.firebase
 
+import android.util.Log
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
 import com.google.firebase.database.DataSnapshot
@@ -20,14 +22,18 @@ class RealtimeDB @Inject constructor(
     @Named(DB_ROOMS) private val dbRoomsReference: DatabaseReference,
     @Named(DB_PENGAJUAN) private val dbPengajuanReference: DatabaseReference,
 ) {
-    suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = callbackFlow {
+    suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = callbackFlow {
         trySend(Resource.Loading)
         dbRoomsReference.keepSynced(true)
-        dbRoomsReference.orderByChild("nama_ruangan")
         val event = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+
+                Log.d("Albar Fikri", snapshot.value.toString())
                 val rooms = snapshot.children.map { dataSnapshot ->
-                    dataSnapshot.getValue<RoomsModel>()
+                    RoomsModelMain(
+                        key = dataSnapshot.key,
+                        item = dataSnapshot.getValue<RoomsModel>()
+                    )
                 }
                 trySend(Resource.Success(rooms))
             }
@@ -40,11 +46,11 @@ class RealtimeDB @Inject constructor(
         awaitClose { close() }
     }
 
-    suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> = callbackFlow {
+    suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> = callbackFlow {
         trySend(Resource.Loading)
-        val data = toMap(roomsModel)
+        val data = toMap(roomsModelMain.item!!)
 
-        dbRoomsReference.child(roomsModel.id_ruangan.toString()).updateChildren(
+        dbRoomsReference.child(roomsModelMain.key!!).updateChildren(
             data
         ).addOnCompleteListener {
             trySend(Resource.Success("Update Succesfully"))

@@ -91,6 +91,7 @@ import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitNimVali
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitTextDetectionState
 import com.example.aplikasipeminjamanruangan.presentation.utils.CameraView
 import com.example.aplikasipeminjamanruangan.presentation.utils.MultiFloatingState
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.CameraXViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
@@ -295,7 +296,7 @@ fun MultiFloatingButton(
             Icon(
                 imageVector = Icons.Rounded.Add,
                 contentDescription = "Add FAB",
-                tint = Color.White,
+                tint = textColor,
             )
         }
     }
@@ -318,7 +319,7 @@ fun MinFab(
     ) {
         if (showLabel) {
             Text(
-                text = item.label, fontSize = 14.sp, color = Color.White, modifier = Modifier
+                text = item.label, fontSize = 14.sp, color = textColor, modifier = Modifier
                     .alpha(
                         animateFloatAsState(
                             targetValue = alpha, animationSpec = tween(50)
@@ -356,7 +357,7 @@ fun MinFab(
             drawImage(
                 image = item.Icon, topLeft = Offset(
                     center.x - (item.Icon.width / 2), center.y - (item.Icon.width / 2)
-                ), alpha = alpha, colorFilter = ColorFilter.tint(Color.White)
+                ), alpha = alpha, colorFilter = ColorFilter.tint(textColor)
             )
         }
     }
@@ -377,14 +378,14 @@ fun ShowingImageAndStatusOutput(
         Column(
             modifier = Modifier.padding(8.dp),
         ) {
-            Text(color = Color.Black,
+            Text(color = textColor,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 text = buildAnnotatedString {
                     append("Nim: ")
                     withStyle(
                         style = SpanStyle(
-                            color = Color.Black, fontWeight = FontWeight.Normal, fontSize = 14.sp
+                            color = textColor, fontWeight = FontWeight.Normal, fontSize = 14.sp
                         )
                     ) {
                         append(
@@ -428,7 +429,7 @@ fun ShowingImageAndStatusOutput(
                     } else {
                         Text(
                             "Verifikasi",
-                            color = Color.White,
+                            color = textColor,
                             style = MaterialTheme.typography.body1
                         )
                     }
@@ -523,7 +524,7 @@ fun FinalVerificationStatus(
                 ) {
                     Text(
                         "Selanjutnya",
-                        color = Color.White,
+                        color = textColor,
                         style = MaterialTheme.typography.body1
                     )
                 }
@@ -585,14 +586,14 @@ fun PermissionProcess(
             Snackbar() {
                 Text(
                     text = " \"The camera is important for this app. Please grant the permission.\"",
-                    color = Color.Black
+                    color = textColor
                 )
             }
         } else {
             Snackbar() {
                 Text(
                     text = "Camera permission required for this feature to be available. " + "Please grant the permission",
-                    color = Color.Black
+                    color = textColor
                 )
             }
         }

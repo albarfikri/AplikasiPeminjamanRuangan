@@ -36,13 +36,6 @@ class PengajuanViewModel @Inject constructor(
                 errMsg = null
             )
         }
-        _getPengajuan.update{
-            it.copy(
-                data = null,
-                isLoading = false,
-                errMsg = null
-            )
-        }
     }
 
     fun insertPengajuan(data: PengajuanModel) = viewModelScope.launch {

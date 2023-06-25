@@ -51,6 +51,7 @@ fun ItemCardWaiting(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val textColor = Color.Black
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -63,10 +64,12 @@ fun ItemCardWaiting(
                     color = Color(0xFFD1D5E1)
                 ) {
                     Text(
-                        text = if(item.pengajuanDiterima) "Diterima" else "Belum Diterima",
+                        text = if (item.pengajuanDiterima) "Diterima" else "Belum Diterima",
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.h2,
-                        color = if(item.pengajuanDiterima) MaterialTheme.colors.primary else MaterialTheme.colors.secondary,
+                        color = if (item.pengajuanDiterima) MaterialTheme.colors.primary else Color(
+                            0xFFAD1457
+                        ),
                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
                     )
                 }
@@ -77,12 +80,16 @@ fun ItemCardWaiting(
                     text = item.ruangan!!,
                     fontSize = 20.sp,
                     style = MaterialTheme.typography.h2,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = textColor
                 )
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Text(text = "Dipinjam untuk tgl:\n${item.tanggal}", fontSize = 14.sp)
+                Text(
+                    text = "Dipinjam untuk tgl:\n${item.tanggal}", fontSize = 14.sp,
+                    color = textColor
+                )
 
                 Spacer(modifier = Modifier.height(2.dp))
 
@@ -91,7 +98,8 @@ fun ItemCardWaiting(
                         text = "Peminjam",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.h2
+                        style = MaterialTheme.typography.h2,
+                        color = textColor
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     Icon(
@@ -103,29 +111,13 @@ fun ItemCardWaiting(
                         text = item.nama!!,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        style = MaterialTheme.typography.h2
+                        style = MaterialTheme.typography.h2,
+                        color = textColor
                     )
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
-
-//                OutlinedButton(
-//                    shape = RoundedCornerShape(8.dp),
-//                    colors = ButtonDefaults.buttonColors(
-//                        contentColor = Color.Black,
-//                        backgroundColor = Color.White
-//                    ),
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Text(
-//                        text = "Detail",
-//                        fontSize = 11.sp,
-//                        fontWeight = FontWeight.SemiBold,
-//                        style = MaterialTheme.typography.h2
-//                    )
-//                }
             }
-
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.size(width = 100.dp, height = 140.dp)
@@ -147,4 +139,5 @@ fun ItemCardWaiting(
         }
     }
 }
+
 

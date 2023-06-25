@@ -8,6 +8,7 @@ import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.presentation.utils.COLLECTION
 import com.example.aplikasipeminjamanruangan.presentation.utils.URL_IMAGE_DETECTION
@@ -30,8 +31,8 @@ class AppRepository @Inject constructor(
     @Named(URL_IMAGE_DETECTION) private val retrofit: Retrofit,
     @Named(URL_PCR) private val retrofitUrlPcr: Retrofit
 ) : IAppRepository {
-    override suspend fun getRooms(): Flow<Resource<List<RoomsModel?>>> = realtimeDB.getRooms()
-    override suspend fun updateRooms(roomsModel: RoomsModel): Flow<Resource<String>> = realtimeDB.updateRooms(roomsModel)
+    override suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = realtimeDB.getRooms()
+    override suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> = realtimeDB.updateRooms(roomsModelMain)
     override suspend fun getImageResult(file: File): Flow<Resource<RetrofitImageModel>> =
         flow {
             emit(Resource.Loading)

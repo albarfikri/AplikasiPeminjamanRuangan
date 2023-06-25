@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -20,6 +21,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.aplikasipeminjamanruangan.R
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Home
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -28,7 +30,7 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier) {
     val splashEndDelay = 2200.milliseconds
     val animEndDelay = 1300
 
-    var isSplashScreenStart by remember {
+    var isSplashScreenStart by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -39,19 +41,19 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier) {
         )
     )
 
-    LaunchedEffect(key1 = true) {
-        isSplashScreenStart = true
-        delay(splashEndDelay)
-        navController.popBackStack()
-        navController.navigate(Home.route)
-    }
-
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.history))
 
     val progress by animateLottieCompositionAsState(
         composition = composition,
         isPlaying = isSplashScreenStart,
     )
+
+    LaunchedEffect(key1 = true) {
+        isSplashScreenStart = true
+        delay(splashEndDelay)
+        navController.popBackStack()
+        navController.navigate(Home.route)
+    }
 
     Column(
         modifier = Modifier
@@ -67,13 +69,13 @@ fun SplashScreen(navController: NavHostController, modifier: Modifier) {
         )
         Text(
             text = stringResource(id = R.string.splash_text), style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.onPrimary,
+            color = textColor,
             modifier = modifier.alpha(alphaAnim.value)
         )
         Text(
             text = stringResource(id = R.string.splash_caption),
             style = MaterialTheme.typography.caption,
-            color = MaterialTheme.colors.onPrimary,
+            color = textColor,
             modifier = modifier.alpha(alphaAnim.value)
         )
     }

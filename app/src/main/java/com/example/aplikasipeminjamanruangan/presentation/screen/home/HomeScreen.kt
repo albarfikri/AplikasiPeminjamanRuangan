@@ -29,36 +29,37 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.presentation.components.home.ItemCard
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
 import com.example.aplikasipeminjamanruangan.presentation.utils.AnimateShimmer
 import com.example.aplikasipeminjamanruangan.presentation.utils.FIRST_FLOOR
 import com.example.aplikasipeminjamanruangan.presentation.utils.SECOND_FLOOR
 import com.example.aplikasipeminjamanruangan.presentation.utils.THIRD_FLOOR
+import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 
 
 @Composable
 fun HomeScreen(
+    roomsState: RealtimeDBRoomsState,
     appViewModel: AppViewModel,
-    onHeadingToDetail: (RoomsModel) -> Unit,
+    onHeadingToDetail: (RoomsModelMain) -> Unit,
     modifier: Modifier
 ) {
-    val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(color = MaterialTheme.colors.onPrimary, text = buildAnnotatedString {
+        Text(color = textColor, text = buildAnnotatedString {
             append("Hai, ")
             withStyle(
                 style = SpanStyle(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onPrimary
+                    color = textColor
                 )
             ) {
                 append("Mahasiswa")
@@ -111,22 +112,24 @@ fun HomeScreen(
 @Composable
 fun SpreadingData(
     roomsState: RealtimeDBRoomsState,
-    onHeadingToDetail: (RoomsModel) -> Unit,
+    onHeadingToDetail: (RoomsModelMain) -> Unit,
     floor: String,
     modifier: Modifier
 ) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(80.dp), content = {
-        items(roomsState.data!!) { data ->
-            if (data?.lantai_ruangan.equals(floor)) {
-                ListRoomBasedOnFloor(
-                    item = data,
-                    onHeadingToDetail = onHeadingToDetail,
-                    modifier = modifier
-                )
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(80.dp), content = {
+            items(roomsState.data!!) { data ->
+                if (data?.item?.lantai_ruangan.equals(floor)) {
+                    ListRoomBasedOnFloor(
+                        item = data,
+                        onHeadingToDetail = onHeadingToDetail,
+                        modifier = modifier
+                    )
+                }
             }
-        }
-    },
-    modifier=  Modifier.height(285.dp), horizontalArrangement = Arrangement.Start)
+        },
+        modifier = Modifier.height(285.dp), horizontalArrangement = Arrangement.Start
+    )
 }
 
 
@@ -149,7 +152,7 @@ fun CardFeature(modifier: Modifier) {
         Text(
             text = "\"Mau pinjam ruangan apa hari ini ?\"",
             fontSize = 16.sp,
-            color = Color.White,
+            color = textColor,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(12.dp)
@@ -160,8 +163,8 @@ fun CardFeature(modifier: Modifier) {
 
 @Composable
 fun ListRoomBasedOnFloor(
-    item: RoomsModel?,
-    onHeadingToDetail: (RoomsModel) -> Unit,
+    item: RoomsModelMain?,
+    onHeadingToDetail: (RoomsModelMain) -> Unit,
     modifier: Modifier
 ) {
     if (item != null) {
@@ -180,7 +183,7 @@ fun FloorDescription(floorName: String) {
         text = "Lantai $floorName",
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colors.onPrimary
+        color = textColor
     )
 }
 
