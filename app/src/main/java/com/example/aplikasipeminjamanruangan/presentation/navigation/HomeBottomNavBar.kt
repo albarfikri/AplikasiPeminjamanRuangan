@@ -1,6 +1,7 @@
 package com.example.aplikasipeminjamanruangan.presentation.navigation
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.ContentAlpha
@@ -9,7 +10,10 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
@@ -23,7 +27,17 @@ fun HomeBottomNavBar(
     navBackStackEntry: NavBackStackEntry?, navController: NavHostController
 ) {
     val currDestination = navBackStackEntry?.destination
-    BottomNavigation(elevation = 32.dp) {
+    val color = MaterialTheme.colors.secondary
+    BottomNavigation(
+        elevation = 32.dp,
+        backgroundColor = MaterialTheme.colors.secondary,
+        modifier = Modifier.clip(
+            RoundedCornerShape(
+                topStart = 16.dp,
+                topEnd = 16.dp,
+            )
+        )
+    ) {
         listOfTabScreen.forEach { screen ->
             AddItem(
                 screen = screen, currDestination = currDestination, navController = navController
@@ -36,23 +50,26 @@ fun HomeBottomNavBar(
 fun RowScope.AddItem(
     screen: AppDestination, currDestination: NavDestination?, navController: NavHostController
 ) {
-    BottomNavigationItem(label = {
-        Text(
-            text = screen.text,
-            fontSize = if (currDestination?.route == screen.route) 14.sp else 12.sp,
-            style = if (currDestination?.route == screen.route) MaterialTheme.typography.h3 else MaterialTheme.typography.h3,
-            color = if (currDestination?.route == screen.route) textColor else Color.LightGray
-        )
-    }, icon = {
-        Icon(
-            imageVector = screen.icon,
-            contentDescription = screen.text,
-            tint = if (currDestination?.route == screen.route) textColor else Color.LightGray
-        )
-    }, selected = currDestination?.hierarchy?.any {
-        it.route == screen.route
-    } == true, onClick = {
-        navController.navigateSingleTopTo(screen.route)
-    }, unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
+    BottomNavigationItem(
+        label = {
+            Text(
+                text = screen.text,
+                fontSize = if (currDestination?.route == screen.route) 14.sp else 12.sp,
+                style = if (currDestination?.route == screen.route) MaterialTheme.typography.h3 else MaterialTheme.typography.h3,
+                fontWeight = if (currDestination?.route == screen.route) FontWeight.Bold else FontWeight.Normal,
+                color = textColor,
+                modifier = Modifier.alpha(if (currDestination?.route == screen.route) 1F else 0.4F)
+            )
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = screen.text,
+            )
+        }, selected = currDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true, onClick = {
+            navController.navigateSingleTopTo(screen.route)
+        }, unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled)
     )
 }

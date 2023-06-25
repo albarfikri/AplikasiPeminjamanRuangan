@@ -45,7 +45,8 @@ fun ItemCard(
                     .makeText(context, item.item?.isLent.toString(), Toast.LENGTH_SHORT)
                     .show()
             })
-            .fillMaxWidth(), shape = RoundedCornerShape(16.dp), elevation = 14.dp
+            .fillMaxWidth(), shape = RoundedCornerShape(16.dp),
+        elevation = 8.dp
     ) {
         Box {
             Column {

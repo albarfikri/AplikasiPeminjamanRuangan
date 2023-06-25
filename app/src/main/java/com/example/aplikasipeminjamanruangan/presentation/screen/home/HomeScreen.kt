@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -17,10 +19,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.presentation.components.home.ItemCard
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRoomsState
@@ -91,14 +90,14 @@ fun HomeScreen(
                     modifier = modifier
                 )
                 FloorDescription(floorName = "II")
-                SpreadingData(
+                SpreadingData2(
                     roomsState = roomsState,
                     floor = SECOND_FLOOR,
                     onHeadingToDetail = onHeadingToDetail,
                     modifier = modifier
                 )
                 FloorDescription(floorName = "III")
-                SpreadingData(
+                SpreadingData2(
                     roomsState = roomsState,
                     floor = THIRD_FLOOR,
                     onHeadingToDetail = onHeadingToDetail,
@@ -117,7 +116,7 @@ fun SpreadingData(
     modifier: Modifier
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(80.dp), content = {
+        columns = GridCells.Fixed(4), content = {
             items(roomsState.data!!) { data ->
                 if (data?.item?.lantai_ruangan.equals(floor)) {
                     ListRoomBasedOnFloor(
@@ -132,6 +131,25 @@ fun SpreadingData(
     )
 }
 
+@Composable
+fun SpreadingData2(
+    roomsState: RealtimeDBRoomsState,
+    onHeadingToDetail: (RoomsModelMain) -> Unit,
+    floor: String,
+    modifier: Modifier
+) {
+    LazyRow {
+        items(roomsState.data!!) { data ->
+            if (data?.item?.lantai_ruangan.equals(floor)) {
+                ListRoomBasedOnFloor(
+                    item = data,
+                    onHeadingToDetail = onHeadingToDetail,
+                    modifier = modifier
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun CardFeature(modifier: Modifier) {
