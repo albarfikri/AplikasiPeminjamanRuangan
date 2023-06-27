@@ -32,7 +32,6 @@ import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 fun ItemCard(
     item: RoomsModelMain, onHeadingToDetail: (RoomsModelMain) -> Unit, modifier: Modifier
 ) {
-    val context = LocalContext.current
     Card(
         backgroundColor = if(item.item?.isLent!!) Color.Black else Color.White,
         modifier = Modifier
@@ -41,9 +40,6 @@ fun ItemCard(
             .padding(4.dp)
             .clickable( onClick = {
                 onHeadingToDetail(item)
-                Toast
-                    .makeText(context, item.item.isLent.toString(), Toast.LENGTH_SHORT)
-                    .show()
             })
             .fillMaxWidth(), shape = RoundedCornerShape(16.dp),
         elevation = 8.dp
@@ -64,7 +60,7 @@ fun ItemCard(
 
                 Text(
                     color = Color.Black,
-                    text = "${item.item.nama_ruangan!!} \n ${item.item.isLent}",
+                    text = "${item.item.nama_ruangan!!}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,

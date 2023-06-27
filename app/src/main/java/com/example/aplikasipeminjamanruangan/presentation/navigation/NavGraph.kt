@@ -85,6 +85,9 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                     pengajuanViewModel.insertPengajuan(dataPengajuan)
                     appViewModel.updateRooms(roomsUpdate)
                 },
+                onSaveToHistory = {
+                    peminjamanViewModel.insertPeminjaman(it)
+                },
                 onNavBack = {
                     navController.popBackStack()
                 },

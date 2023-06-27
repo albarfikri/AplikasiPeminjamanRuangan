@@ -29,7 +29,6 @@ class PeminjamanViewModel @Inject constructor(
     init {
         getPeminjaman()
     }
-
     fun insertPeminjaman(data: PeminjamanModel) = viewModelScope.launch {
         appUseCase.insertPeminjaman(data).collect { result ->
             when (result) {

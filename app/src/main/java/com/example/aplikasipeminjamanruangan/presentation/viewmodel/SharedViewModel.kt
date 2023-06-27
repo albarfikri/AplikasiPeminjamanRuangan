@@ -26,7 +26,7 @@ class SharedViewModel : ViewModel() {
                         fasilitas_ruangan = null,
                         foto_ruangan = null,
                         id_ruangan = 0,
-                        isLent = false,
+                        isLent = null,
                         lantai_ruangan = null,
                         nama_ruangan = null
                     )

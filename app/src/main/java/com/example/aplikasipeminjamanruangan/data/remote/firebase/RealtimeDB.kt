@@ -144,7 +144,7 @@ class RealtimeDB @Inject constructor(
                 trySend(Resource.Error(Throwable(error.message)))
             }
         }
-        dbPengajuanReference.addValueEventListener(event)
+        dbPeminjamanReference.addValueEventListener(event)
         awaitClose { close() }
     }
 }

@@ -268,8 +268,6 @@ fun ItemCard(
                         .data("")
                         .crossfade(true)
                         .build(),
-                    placeholder = painterResource(id = R.drawable.loading_img),
-                    error = painterResource(id = R.drawable.ic_broken_image),
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )

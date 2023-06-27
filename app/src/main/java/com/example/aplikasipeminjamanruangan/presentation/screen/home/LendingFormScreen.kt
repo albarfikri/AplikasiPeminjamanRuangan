@@ -59,6 +59,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
@@ -84,6 +85,7 @@ fun LendingFormScreen(
     retrofitViewModel: RetrofitViewModel,
     pengajuanViewModel: PengajuanViewModel,
     onPinjamRuangan: (PengajuanModel, RoomsModelMain) -> Unit,
+    onSaveToHistory: (PeminjamanModel) -> Unit,
     onNavBack: () -> Unit,
     onActionClick: () -> Unit,
     modifier: Modifier
@@ -117,7 +119,10 @@ fun LendingFormScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             TopAppBar(
-                onNavBack = onNavBack, modifier = modifier, bigText = "Form", smallText = "Peminjaman Ruangan"
+                onNavBack = onNavBack,
+                modifier = modifier,
+                bigText = "Form",
+                smallText = "Peminjaman Ruangan"
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -130,6 +135,7 @@ fun LendingFormScreen(
                     pengajuanState = pengajuanState,
                     onPinjamRuangan = onPinjamRuangan,
                     onActionClick = onActionClick,
+                    onSaveToHistory = onSaveToHistory,
                     context = context
                 )
             }
@@ -146,6 +152,7 @@ fun LendingForm(
     pengajuanState: RealtimeDBPengajuanState,
     onPinjamRuangan: (PengajuanModel, RoomsModelMain) -> Unit,
     onActionClick: () -> Unit,
+    onSaveToHistory: (PeminjamanModel) -> Unit,
     context: Context
 ) {
     Card(
@@ -410,6 +417,18 @@ fun LendingForm(
                                     lantai_ruangan = roomsModelMain.item?.lantai_ruangan,
                                     nama_ruangan = roomsModelMain.item?.nama_ruangan
                                 )
+                            )
+                        )
+                        onSaveToHistory.invoke(
+                            PeminjamanModel(
+                                fasilitas = fasilitasValue,
+                                jmulai = jMulaiValue,
+                                jselesai = jSelesaiValue,
+                                nama = namaValue,
+                                nim = nimValue,
+                                prodi = prodiValue,
+                                ruangan = ruanganValue,
+                                tanggal = tanggalValue
                             )
                         )
                     }

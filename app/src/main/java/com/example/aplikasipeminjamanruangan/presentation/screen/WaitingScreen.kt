@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,20 +32,21 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.aplikasipeminjamanruangan.R
+import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.presentation.components.waiting.ItemCardWaiting
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBGetPengajuanState
 import com.example.aplikasipeminjamanruangan.presentation.utils.AnimateWaitingListShimmer
 import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
-import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun WaitingScreen(pengajuanViewModel: PengajuanViewModel) {
+fun WaitingScreen(
+    pengajuanViewModel: PengajuanViewModel,
+) {
     val getPengajuan = pengajuanViewModel.getPengajuan.collectAsStateWithLifecycle().value
     var isSplashScreenStart by rememberSaveable {
         mutableStateOf(false)
     }
-
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
@@ -58,7 +58,7 @@ fun WaitingScreen(pengajuanViewModel: PengajuanViewModel) {
                 style = SpanStyle(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color =textColor
+                    color = textColor
                 )
             ) {
                 append("List")
@@ -109,19 +109,27 @@ fun NoDataAvailableLottie(isSplashScreenStart: Boolean) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
         LottieAnimation(
             composition = composition,
             progress = { progress },
-            modifier = Modifier.alpha(alphaAnim.value).width(320.dp).height(320.dp)
+            modifier = Modifier
+                .alpha(alphaAnim.value)
+                .width(320.dp)
+                .height(320.dp)
         )
-        Text(color = textColor, text = "No data Available", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(
+            color = textColor,
+            text = "No data Available",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
 @Composable
 fun SpreadingData(
-    getPengajuan: RealtimeDBGetPengajuanState,
+    getPengajuan: RealtimeDBGetPengajuanState
 ) {
     LazyColumn {
         items(getPengajuan.data!!) { data ->

@@ -302,7 +302,7 @@ fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Lantai", style = MaterialTheme.typography.h2, color = textColor)
             Text(
-                text = "${data.lantai_ruangan} ${data.isLent}",
+                text = "${data.lantai_ruangan}",
                 color = textColor
             )
             Spacer(modifier = Modifier.height(18.dp))

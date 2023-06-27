@@ -37,7 +37,6 @@ class PengajuanViewModel @Inject constructor(
             )
         }
     }
-
     fun insertPengajuan(data: PengajuanModel) = viewModelScope.launch {
         appUseCase.insertPengajuan(data).collect { result ->
             when (result) {
