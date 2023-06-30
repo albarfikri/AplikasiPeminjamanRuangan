@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.aplikasipeminjamanruangan.presentation.screen.HistoryScreen
+import com.example.aplikasipeminjamanruangan.presentation.screen.SearchingScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.SplashScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.WaitingScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeDetailScreen
@@ -31,9 +32,8 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
     val peminjamanViewModel: PeminjamanViewModel = hiltViewModel()
 
-
     NavHost(
-        navController = navController, startDestination = Splash.route, modifier = modifier
+        navController = navController, startDestination = HomeSearch.route, modifier = modifier
     ) {
         composable(route = Splash.route) {
             SplashScreen(navController = navController, modifier = modifier)
@@ -44,7 +44,25 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                 onHeadingToDetail = { room ->
                     sharedViewModel.addRooms(room)
                     navController.navigateSingleTopTo(HomeDetail.route)
-                }, modifier = modifier
+                },
+                onSearchRooms = {
+                    navController.navigateSingleTopTo(HomeSearch.route)
+                },
+                modifier = modifier
+            )
+        }
+
+        composable(route = HomeSearch.route) {
+            SearchingScreen(
+                onNavBack = {
+                    navController.navigateSingleTopTo(Home.route)
+                },
+                onHeadingToDetail = {
+                    sharedViewModel.addRooms(it)
+                    navController.navigateSingleTopTo(HomeDetail.route)
+                },
+                peminjamanViewModel = peminjamanViewModel,
+                appViewModel = appViewModel,
             )
         }
 

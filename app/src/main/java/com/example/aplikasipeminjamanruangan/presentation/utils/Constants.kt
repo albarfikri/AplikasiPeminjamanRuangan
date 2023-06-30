@@ -10,6 +10,7 @@ const val THIRD_FLOOR = "Lantai 3"
 const val DB_ROOMS = "rooms"
 const val DB_PENGAJUAN = "pengajuan"
 const val DB_PEMINJAMAN = "peminjaman"
+const val DB_MATAKULIAH = "matakuliah"
 
 // Swipping collapsing layout state
 enum class SwipingStates {

@@ -1,7 +1,9 @@
 package com.example.aplikasipeminjamanruangan.presentation.screen.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -14,14 +16,22 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +55,7 @@ import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 fun HomeScreen(
     appViewModel: AppViewModel,
     onHeadingToDetail: (RoomsModelMain) -> Unit,
+    onSearchRooms: () -> Unit,
     modifier: Modifier
 ) {
     val roomsState by appViewModel.roomsState.collectAsStateWithLifecycle()
@@ -54,18 +65,47 @@ fun HomeScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text(color = textColor, text = buildAnnotatedString {
-            append("Hai, ")
-            withStyle(
-                style = SpanStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = textColor
-                )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(color = textColor, text = buildAnnotatedString {
+                append("Hai, ")
+                withStyle(
+                    style = SpanStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor
+                    )
+                ) {
+                    append("Mahasiswa")
+                }
+            })
+            Spacer(modifier = modifier.weight(1f))
+            Card(
+                elevation = (-20).dp,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(18.dp))
+                    .alpha(0.75f)
+                    .height(35.dp)
+                    .clickable { onSearchRooms() }
             ) {
-                append("Mahasiswa")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 12.dp, end = 4.dp)
+                ) {
+                    Text(
+                        text = "Cari Ruangan", fontSize = 14.sp,
+                        style = MaterialTheme.typography.body1, color = Color.Black,
+                    )
+                    IconButton(onClick = { onSearchRooms() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = "Search",
+                            tint = Color.Black
+                        )
+                    }
+                }
             }
-        })
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
         CardFeature(modifier = Modifier)
         Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +154,7 @@ fun HomeScreen(
 fun SpreadingData(
     roomsState: RealtimeDBRoomsState,
     onHeadingToDetail: (RoomsModelMain) -> Unit,
-    floor: String,
+    floor: String = "",
     modifier: Modifier
 ) {
     LazyVerticalGrid(
@@ -172,7 +212,7 @@ fun CardFeature(modifier: Modifier) {
         Text(
             text = "\"Mau pinjam ruangan apa hari ini ?\"",
             fontSize = 16.sp,
-            color = textColor ,
+            color = textColor,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(12.dp)
         )

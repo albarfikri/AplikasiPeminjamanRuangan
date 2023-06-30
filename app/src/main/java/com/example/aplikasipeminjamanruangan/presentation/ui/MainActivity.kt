@@ -1,11 +1,6 @@
 package com.example.aplikasipeminjamanruangan.presentation.ui
 
-import android.content.Context
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -22,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Home
 import com.example.aplikasipeminjamanruangan.presentation.navigation.HomeBottomNavBar
 import com.example.aplikasipeminjamanruangan.presentation.navigation.HomeDetail
+import com.example.aplikasipeminjamanruangan.presentation.navigation.HomeSearch
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Lending
 import com.example.aplikasipeminjamanruangan.presentation.navigation.LendingForm
 import com.example.aplikasipeminjamanruangan.presentation.navigation.NavGraph
@@ -60,7 +56,8 @@ class MainActivity : ComponentActivity() {
                     visible = currentDestination?.route != Splash.route &&
                             currentDestination?.route != HomeDetail.route
                             && currentDestination?.route != Lending.route &&
-                            currentDestination?.route != LendingForm.route
+                            currentDestination?.route != LendingForm.route &&
+                            currentDestination?.route != HomeSearch.route
                 ) {
                     bottomBar(navBackStackEntry = currentBackStack, navController = navController)
                 }
