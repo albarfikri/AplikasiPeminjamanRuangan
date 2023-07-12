@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PengajuanModel(
-    val fasilitas: String? = null,
     val jmulai: String? = null,
     val jselesai: String? = null,
     val nama: String? = null,
@@ -14,5 +13,6 @@ data class PengajuanModel(
     val ruangan: String? = null,
     val tanggal: String? = null,
     val pengajuanDiterima: Boolean = false,
+    val pengembalianDiterima: Boolean = false,
     val fotoRuangan: String? = null
 ) : Parcelable

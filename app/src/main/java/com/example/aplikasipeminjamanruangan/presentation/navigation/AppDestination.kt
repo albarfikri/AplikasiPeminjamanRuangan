@@ -28,7 +28,7 @@ object Home: AppDestination{
 object HomeSearch: AppDestination{
     override val icon = Icons.Filled.Home
     override val route = "Home Search"
-    override val text = "Home Search"
+    override val text = "Home"
 }
 
 object HomeDetail: AppDestination{
@@ -61,4 +61,4 @@ object History: AppDestination{
     override val text = "History"
 }
 
-val listOfTabScreen = listOf(Home, WaitingList, History)
+val listOfTabScreen = listOf(HomeSearch, WaitingList)

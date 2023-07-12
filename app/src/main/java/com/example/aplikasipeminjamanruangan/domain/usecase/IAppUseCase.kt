@@ -9,6 +9,7 @@ import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -28,4 +29,6 @@ interface IAppUseCase {
     suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>>
     suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>>
     suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>>
+    suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>>
+
 }

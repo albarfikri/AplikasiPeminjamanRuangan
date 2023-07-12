@@ -67,10 +67,12 @@ fun ItemCardWaiting(
                     color = Color(0xFFD1D5E1)
                 ) {
                     Text(
-                        text = if (item.pengajuanDiterima) "Diterima" else "Belum Diterima",
+                        text = if (item.pengajuanDiterima) "Diterima" else if (item.pengembalianDiterima) "Selesai" else "Belum Diterima",
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.h2,
-                        color = if (item.pengajuanDiterima) MaterialTheme.colors.primary else Color(
+                        color = if (item.pengajuanDiterima) MaterialTheme.colors.primary else if (item.pengembalianDiterima) Color(
+                            0xFF00A86B
+                        ) else Color(
                             0xFFAD1457
                         ),
                         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)

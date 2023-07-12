@@ -1,8 +1,6 @@
 package com.example.aplikasipeminjamanruangan.data.remote.retrofit.apiimagedetector
 
-import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST

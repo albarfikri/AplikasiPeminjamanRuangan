@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +24,6 @@ import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.SwipeableState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -33,7 +31,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -294,17 +291,18 @@ fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Fasilitas", style = MaterialTheme.typography.h2, color = textColor)
-            Text(text = "${data.fasilitas_ruangan}", color = textColor)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = "Deskripsi", style = MaterialTheme.typography.h2, color = textColor)
-            Text(text = "${data.deskripsi_ruangan}", color = textColor)
-            Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Lantai", style = MaterialTheme.typography.h2, color = textColor)
             Text(
                 text = "${data.lantai_ruangan}",
                 color = textColor
             )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = "Fasilitas", style = MaterialTheme.typography.h2, color = textColor)
+            Text(text = "${data.fasilitas_ruangan}", color = textColor)
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = "Deskripsi", style = MaterialTheme.typography.h2, color = textColor)
+            Text(text = "${data.deskripsi_ruangan}", color = textColor)
+
             Spacer(modifier = Modifier.height(18.dp))
             Button(
                 onClick = { onLending(data) },
@@ -313,7 +311,7 @@ fun BottomSection(data: RoomsModel, onLending: (RoomsModel) -> Unit) {
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(6.dp),
                 shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
                 Text("Pinjam", color = textColor, style = MaterialTheme.typography.body1)
             }

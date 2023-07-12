@@ -367,36 +367,35 @@ fun LendingForm(
                         })
             }
 
-            Spacer(Modifier.height(spacerHeightValue))
-            OutlinedTextField(value = fasilitasValue,
-                onValueChange = {
-                    facilityState.show()
-                    fasilitasValue = it
-                },
-                label = { Text("Fasilitas", style = MaterialTheme.typography.h3) },
-                colors = textFieldColorsStyle,
-                readOnly = true,
-                leadingIcon = {
-                    Icon(imageVector = Icons.Filled.Category,
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary,
-                        modifier = modifier.clickable { facilityState.show() })
-                },
-                maxLines = 1,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusEvent { event ->
-                        if (event.isFocused) isFacilityClicked = true
-                    })
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(18.dp))
+//            OutlinedTextField(value = fasilitasValue,
+//                onValueChange = {
+//                    facilityState.show()
+//                    fasilitasValue = it
+//                },
+//                label = { Text("Fasilitas", style = MaterialTheme.typography.h3) },
+//                colors = textFieldColorsStyle,
+//                readOnly = true,
+//                leadingIcon = {
+//                    Icon(imageVector = Icons.Filled.Category,
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colors.secondary,
+//                        modifier = modifier.clickable { facilityState.show() })
+//                },
+//                maxLines = 1,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .onFocusEvent { event ->
+//                        if (event.isFocused) isFacilityClicked = true
+//                    })
+//            Spacer(Modifier.height(12.dp))
             Button(
                 onClick = {
-                    if (nimValue.isEmpty() || namaValue.isEmpty() || prodiValue.isEmpty() || ruanganValue.isEmpty() || tanggalValue.isEmpty() || jMulaiValue.isEmpty() || jSelesaiValue.isEmpty() || fasilitasValue.isEmpty()) {
+                    if (nimValue.isEmpty() || namaValue.isEmpty() || prodiValue.isEmpty() || ruanganValue.isEmpty() || tanggalValue.isEmpty() || jMulaiValue.isEmpty() || jSelesaiValue.isEmpty()) {
                         Toast.makeText(context, "Field cannot empty !", Toast.LENGTH_SHORT).show()
                     } else {
                         onPinjamRuangan.invoke(
                             PengajuanModel(
-                                fasilitas = fasilitasValue,
                                 jmulai = jMulaiValue,
                                 jselesai = jSelesaiValue,
                                 nama = namaValue,

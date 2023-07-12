@@ -9,6 +9,7 @@ import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.domain.repository.ICustomCameraRepository
@@ -54,4 +55,7 @@ class AppInteractor @Inject constructor(
 
     override suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>> =
         appRepository.getPeminjaman()
+
+    override suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>> =
+        appRepository.getMataKuliah()
 }

@@ -1,5 +1,6 @@
 package com.example.aplikasipeminjamanruangan.di
 
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_MATAKULIAH
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
@@ -31,4 +32,10 @@ class RealtimeDBModule {
     @Named(DB_PEMINJAMAN)
     fun provideRealtimeDBPeminjamanRef(): DatabaseReference = Firebase.database.getReference(
         DB_PEMINJAMAN)
+
+    @Provides
+    @Singleton
+    @Named(DB_MATAKULIAH)
+    fun provideRealtimeDBMataKuliahRef(): DatabaseReference = Firebase.database.getReference(
+        DB_MATAKULIAH)
 }

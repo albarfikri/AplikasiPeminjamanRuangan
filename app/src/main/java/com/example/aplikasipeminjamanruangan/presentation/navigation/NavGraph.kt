@@ -18,6 +18,7 @@ import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingFor
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingScreen
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.CameraXViewModel
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.MataKuliahViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PeminjamanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
@@ -31,9 +32,10 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val retrofitViewModel: RetrofitViewModel = hiltViewModel()
     val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
     val peminjamanViewModel: PeminjamanViewModel = hiltViewModel()
+    val mataKuliahViewModel: MataKuliahViewModel = hiltViewModel()
 
     NavHost(
-        navController = navController, startDestination = HomeSearch.route, modifier = modifier
+        navController = navController, startDestination = Splash.route, modifier = modifier
     ) {
         composable(route = Splash.route) {
             SplashScreen(navController = navController, modifier = modifier)
@@ -55,13 +57,14 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
         composable(route = HomeSearch.route) {
             SearchingScreen(
                 onNavBack = {
-                    navController.navigateSingleTopTo(Home.route)
+                    navController.navigateSingleTopTo(HomeSearch.route)
                 },
                 onHeadingToDetail = {
                     sharedViewModel.addRooms(it)
                     navController.navigateSingleTopTo(HomeDetail.route)
                 },
-                peminjamanViewModel = peminjamanViewModel,
+                pengajuanViewModel = pengajuanViewModel,
+                mataKuliahViewModel = mataKuliahViewModel,
                 appViewModel = appViewModel,
             )
         }
@@ -70,7 +73,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
             HomeDetailScreen(
                 sharedViewModel = sharedViewModel,
                 onNavBack = {
-                    navController.navigateSingleTopTo(Home.route)
+                    navController.navigateSingleTopTo(HomeSearch.route)
                 },
                 onLending = {
                     navController.navigate(Lending.route)
@@ -104,7 +107,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                     appViewModel.updateRooms(roomsUpdate)
                 },
                 onSaveToHistory = {
-                    peminjamanViewModel.insertPeminjaman(it)
+//                    peminjamanViewModel.insertPeminjaman(it)
                 },
                 onNavBack = {
                     navController.popBackStack()
@@ -113,7 +116,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
                     sharedViewModel.resetRoomsData()
                     retrofitViewModel.resetRetrofitData()
                     pengajuanViewModel.resetPengajuanViewModel()
-                    navController.navigateSingleTopTo(Home.route)
+                    navController.navigateSingleTopTo(HomeSearch.route)
                 },
                 modifier = modifier
             )

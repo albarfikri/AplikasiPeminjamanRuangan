@@ -4,8 +4,10 @@ import android.util.Log
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_MATAKULIAH
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_ROOMS
@@ -24,6 +26,7 @@ class RealtimeDB @Inject constructor(
     @Named(DB_ROOMS) private val dbRoomsReference: DatabaseReference,
     @Named(DB_PENGAJUAN) private val dbPengajuanReference: DatabaseReference,
     @Named(DB_PEMINJAMAN) private val dbPeminjamanReference: DatabaseReference,
+    @Named(DB_MATAKULIAH) private val dbMataKuliahReference: DatabaseReference
 ) {
     suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = callbackFlow {
         trySend(Resource.Loading)
@@ -50,6 +53,32 @@ class RealtimeDB @Inject constructor(
         awaitClose { close() }
     }
 
+    suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>> = callbackFlow {
+        trySend(Resource.Loading)
+        dbMataKuliahReference.keepSynced(true)
+        dbMataKuliahReference.orderByKey()
+        val event = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val roomsMataKuliah = mutableListOf<RoomsMataKuliah>()
+                snapshot.children.map {
+                    val dataList = it.value as? List<*>
+                    if (dataList != null && dataList.isNotEmpty()) {
+                        roomsMataKuliah.add(mapToRoomsMataKuliah(dataList))
+                        Log.d("alfi", roomsMataKuliah.toString())
+                    }
+                }
+
+                trySend(Resource.Success(roomsMataKuliah.toList()))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Resource.Error(Throwable(error.message)))
+            }
+        }
+        dbMataKuliahReference.addValueEventListener(event)
+        awaitClose { close() }
+    }
+
     suspend fun updateRooms(roomsModelMain: RoomsModelMain): Flow<Resource<String>> = callbackFlow {
         trySend(Resource.Loading)
         val data = toMap(roomsModelMain.item!!)
@@ -64,6 +93,18 @@ class RealtimeDB @Inject constructor(
         awaitClose {
             close()
         }
+    }
+
+    fun mapToRoomsMataKuliah(dataList: List<*>): RoomsMataKuliah {
+        val field0 = dataList[0]?.toString()?.toIntOrNull()
+        val field1 = dataList[1]?.toString()
+        val field2 = dataList[2]?.toString()
+        val field3 = dataList[3]?.toString()?.toIntOrNull()
+        val field4 = dataList[4]?.toString()
+        val field5 = dataList[5]?.toString()
+        val field6 = dataList[6]?.toString()
+
+        return RoomsMataKuliah(field0, field1, field2, field3, field4, field5, field6)
     }
 
     private fun toMap(roomsModel: RoomsModel): Map<String, Any?> {

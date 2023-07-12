@@ -8,6 +8,7 @@ import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitPcrModel
+import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
 import com.example.aplikasipeminjamanruangan.domain.repository.IAppRepository
 import com.example.aplikasipeminjamanruangan.presentation.utils.COLLECTION
@@ -83,6 +84,10 @@ class AppRepository @Inject constructor(
 
     override suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>> =
         realtimeDB.getPengajuan()
+
+    override suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>> =
+        realtimeDB.getMataKuliah()
+
 
     override suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>> =
         realtimeDB.insertPeminjaman(data)

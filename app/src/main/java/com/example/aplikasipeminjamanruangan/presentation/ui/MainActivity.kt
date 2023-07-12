@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                             currentDestination?.route != HomeDetail.route
                             && currentDestination?.route != Lending.route &&
                             currentDestination?.route != LendingForm.route &&
-                            currentDestination?.route != HomeSearch.route
+                            currentDestination?.route != Home.route
                 ) {
                     bottomBar(navBackStackEntry = currentBackStack, navController = navController)
                 }
