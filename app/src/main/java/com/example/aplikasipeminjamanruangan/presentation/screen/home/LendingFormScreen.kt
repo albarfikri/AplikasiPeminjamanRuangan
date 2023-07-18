@@ -32,7 +32,6 @@ import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pin
@@ -42,6 +41,7 @@ import androidx.compose.material.icons.filled.ViewCozy
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,12 +69,15 @@ import com.example.aplikasipeminjamanruangan.presentation.components.ListDialog
 import com.example.aplikasipeminjamanruangan.presentation.components.home.TopAppBar
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBPengajuanState
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitNimValidation
+import com.example.aplikasipeminjamanruangan.presentation.utils.ConfirmationDialog
+import com.example.aplikasipeminjamanruangan.presentation.utils.DataStore
 import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -191,6 +194,7 @@ fun LendingForm(
             var isJamMulaiClicked by rememberSaveable { mutableStateOf(false) }
             var isJamSelesaiClicked by rememberSaveable { mutableStateOf(false) }
             var isFacilityClicked by rememberSaveable { mutableStateOf(false) }
+            var confirmationDialog by rememberSaveable { mutableStateOf(false) }
 
             retrofitData.data?.forEach {
                 namaValue = it.nama.toString()
@@ -218,6 +222,22 @@ fun LendingForm(
                 facilityState.show()
                 isFacilityClicked = false
             }
+
+            LaunchedEffect(Unit) {
+                DataStore(context).getData.collect { (jMulai, jSelesai, tgl) ->
+                    jMulaiValue = jMulai!!
+                    jSelesaiValue = jSelesai!!
+                    tanggalValue = tgl!!
+                }
+            }
+
+
+            LaunchedEffect(Unit) {
+                DataStore(context).getData.map {
+
+                }
+            }
+
 
             Calendar(calendarState = calendarState, dateValue = {
                 tanggalValue = it.toString()
@@ -367,33 +387,12 @@ fun LendingForm(
                         })
             }
 
-            Spacer(Modifier.height(18.dp))
-//            OutlinedTextField(value = fasilitasValue,
-//                onValueChange = {
-//                    facilityState.show()
-//                    fasilitasValue = it
-//                },
-//                label = { Text("Fasilitas", style = MaterialTheme.typography.h3) },
-//                colors = textFieldColorsStyle,
-//                readOnly = true,
-//                leadingIcon = {
-//                    Icon(imageVector = Icons.Filled.Category,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colors.secondary,
-//                        modifier = modifier.clickable { facilityState.show() })
-//                },
-//                maxLines = 1,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .onFocusEvent { event ->
-//                        if (event.isFocused) isFacilityClicked = true
-//                    })
-//            Spacer(Modifier.height(12.dp))
-            Button(
-                onClick = {
-                    if (nimValue.isEmpty() || namaValue.isEmpty() || prodiValue.isEmpty() || ruanganValue.isEmpty() || tanggalValue.isEmpty() || jMulaiValue.isEmpty() || jSelesaiValue.isEmpty()) {
-                        Toast.makeText(context, "Field cannot empty !", Toast.LENGTH_SHORT).show()
-                    } else {
+            if (confirmationDialog) {
+                ConfirmationDialog(
+                    onDismiss = {
+                        onActionClick()
+                    },
+                    onConfirm = {
                         onPinjamRuangan.invoke(
                             PengajuanModel(
                                 jmulai = jMulaiValue,
@@ -430,6 +429,49 @@ fun LendingForm(
                                 tanggal = tanggalValue
                             )
                         )
+                        confirmationDialog = false
+                    },
+                    pengajuanModel = PengajuanModel(
+                        jmulai = jMulaiValue,
+                        jselesai = jSelesaiValue,
+                        nama = namaValue,
+                        nim = nimValue,
+                        prodi = prodiValue,
+                        ruangan = ruanganValue,
+                        tanggal = tanggalValue,
+                        fotoRuangan = roomsModelMain.item?.foto_ruangan
+                    )
+                )
+            }
+
+            Spacer(Modifier.height(18.dp))
+//            OutlinedTextField(value = fasilitasValue,
+//                onValueChange = {
+//                    facilityState.show()
+//                    fasilitasValue = it
+//                },
+//                label = { Text("Fasilitas", style = MaterialTheme.typography.h3) },
+//                colors = textFieldColorsStyle,
+//                readOnly = true,
+//                leadingIcon = {
+//                    Icon(imageVector = Icons.Filled.Category,
+//                        contentDescription = null,
+//                        tint = MaterialTheme.colors.secondary,
+//                        modifier = modifier.clickable { facilityState.show() })
+//                },
+//                maxLines = 1,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .onFocusEvent { event ->
+//                        if (event.isFocused) isFacilityClicked = true
+//                    })
+//            Spacer(Modifier.height(12.dp))
+            Button(
+                onClick = {
+                    if (nimValue.isEmpty() || namaValue.isEmpty() || prodiValue.isEmpty() || ruanganValue.isEmpty() || tanggalValue.isEmpty() || jMulaiValue.isEmpty() || jSelesaiValue.isEmpty()) {
+                        Toast.makeText(context, "Field cannot empty !", Toast.LENGTH_SHORT).show()
+                    } else {
+                        confirmationDialog = true
                     }
                 },
                 border = BorderStroke(1.dp, Color.White),

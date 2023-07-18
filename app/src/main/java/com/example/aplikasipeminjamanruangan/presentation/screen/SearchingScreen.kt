@@ -1,7 +1,6 @@
 package com.example.aplikasipeminjamanruangan.presentation.screen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +24,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +43,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
-import com.example.aplikasipeminjamanruangan.presentation.components.home.TopAppBar
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.CardFeature
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.ListRoomBasedOnFloor
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBGetPengajuanState
@@ -50,10 +50,12 @@ import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBRooms
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDbMataKuliahState
 import com.example.aplikasipeminjamanruangan.presentation.utils.AnimateShimmer
 import com.example.aplikasipeminjamanruangan.presentation.utils.CustomDialog
+import com.example.aplikasipeminjamanruangan.presentation.utils.DataStore
 import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.MataKuliahViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -92,6 +94,8 @@ fun SearchingScreen(
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
                 .fillMaxSize()
         ) {
+            val scope = rememberCoroutineScope()
+            val context = LocalContext.current
             if (onSearchClicked) {
                 CustomDialog(onDismiss = { onSearchClicked = false }, onConfirm = { data ->
                     tanggalValue = data[0]
@@ -99,6 +103,9 @@ fun SearchingScreen(
                     jSelesaiValue = data[2]
                     reloadData = true
                     onSearchClicked = false
+                    scope.launch {
+                        DataStore(context).saveData(jMulaiValue, jSelesaiValue, tanggalValue)
+                    }
                 })
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -129,7 +136,7 @@ fun SearchingScreen(
                         Text(
                             text = "Cari Ruangan", fontSize = 14.sp,
                             style = MaterialTheme.typography.body1, color = Color.Black,
-                            modifier = Modifier.clickable{ onSearchClicked = true}
+                            modifier = Modifier.clickable { onSearchClicked = true }
                         )
                         IconButton(onClick = { onSearchClicked = true }) {
                             Icon(

@@ -122,6 +122,8 @@ dependencies {
     implementation "com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2"
 
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
 
 kapt {
