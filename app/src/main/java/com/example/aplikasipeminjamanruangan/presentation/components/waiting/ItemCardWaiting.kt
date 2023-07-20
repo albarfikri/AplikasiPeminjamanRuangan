@@ -81,13 +81,15 @@ fun ItemCardWaiting(
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Text(
-                    text = item.ruangan!!,
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.h2,
-                    fontWeight = FontWeight.SemiBold,
-                    color = textColor
-                )
+                item.ruangan?.let {
+                    Text(
+                        text = it,
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.h2,
+                        fontWeight = FontWeight.SemiBold,
+                        color = textColor
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(2.dp))
 

@@ -330,6 +330,7 @@ fun LendingForm(
                 label = { Text("Tanggal", style = MaterialTheme.typography.h3) },
                 colors = textFieldColorsStyle,
                 readOnly = true,
+                enabled = false,
                 leadingIcon = {
                     Icon(imageVector = Icons.Filled.CalendarToday,
                         contentDescription = null,
@@ -352,6 +353,7 @@ fun LendingForm(
                     label = { Text("Mulai", style = MaterialTheme.typography.h3) },
                     colors = textFieldColorsStyle,
                     readOnly = true,
+                    enabled = false,
                     leadingIcon = {
                         Icon(imageVector = Icons.Filled.Schedule,
                             contentDescription = null,
@@ -373,6 +375,7 @@ fun LendingForm(
                     label = { Text("Selesai", style = MaterialTheme.typography.h3) },
                     colors = textFieldColorsStyle,
                     readOnly = true,
+                    enabled = false,
                     leadingIcon = {
                         Icon(imageVector = Icons.Filled.TimerOff,
                             contentDescription = null,
