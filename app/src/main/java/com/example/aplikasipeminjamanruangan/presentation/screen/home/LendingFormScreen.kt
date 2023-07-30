@@ -22,9 +22,13 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
@@ -32,12 +36,15 @@ import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.TimerOff
 import androidx.compose.material.icons.filled.ViewCozy
+import androidx.compose.material.icons.filled.Workspaces
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -52,12 +59,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
@@ -80,6 +91,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
+enum class UnitEnum {
+    Mhs, Bagian, Prodi, BEM
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -190,6 +204,9 @@ fun LendingForm(
             var jMulaiValue by rememberSaveable { mutableStateOf("") }
             var jSelesaiValue by rememberSaveable { mutableStateOf("") }
             var fasilitasValue by rememberSaveable { mutableStateOf("") }
+            var keperluanValue by rememberSaveable { mutableStateOf("") }
+            var unitValue by rememberSaveable { mutableStateOf("") }
+            var penanggungJawabValue by rememberSaveable { mutableStateOf("") }
             var isCalendarClicked by rememberSaveable { mutableStateOf(false) }
             var isJamMulaiClicked by rememberSaveable { mutableStateOf(false) }
             var isJamSelesaiClicked by rememberSaveable { mutableStateOf(false) }
@@ -201,6 +218,14 @@ fun LendingForm(
                 nimValue = it.nim.toString()
                 prodiValue = it.prodi.toString()
             }
+
+            val unit = mapOf(
+                UnitEnum.Mhs to "Mahasiswa",
+                UnitEnum.Bagian to "Bagian",
+                UnitEnum.Prodi to "Prodi",
+                UnitEnum.BEM to "BEM"
+            )
+
 
             ruanganValue = roomsModelMain.item?.nama_ruangan!!
 
@@ -230,7 +255,6 @@ fun LendingForm(
                     tanggalValue = tgl!!
                 }
             }
-
 
             LaunchedEffect(Unit) {
                 DataStore(context).getData.map {
@@ -374,8 +398,8 @@ fun LendingForm(
                     },
                     label = { Text("Selesai", style = MaterialTheme.typography.h3) },
                     colors = textFieldColorsStyle,
-                    readOnly = true,
                     enabled = false,
+                    readOnly = true,
                     leadingIcon = {
                         Icon(imageVector = Icons.Filled.TimerOff,
                             contentDescription = null,
@@ -389,86 +413,90 @@ fun LendingForm(
                             if (event.isFocused) isJamSelesaiClicked = true
                         })
             }
-
-            if (confirmationDialog) {
-                ConfirmationDialog(
-                    onDismiss = {
-                        onActionClick()
-                    },
-                    onConfirm = {
-                        onPinjamRuangan.invoke(
-                            PengajuanModel(
-                                jmulai = jMulaiValue,
-                                jselesai = jSelesaiValue,
-                                nama = namaValue,
-                                nim = nimValue,
-                                prodi = prodiValue,
-                                ruangan = ruanganValue,
-                                tanggal = tanggalValue,
-                                fotoRuangan = roomsModelMain.item?.foto_ruangan
-                            ),
-                            RoomsModelMain(
-                                key = roomsModelMain.key,
-                                item = RoomsModel(
-                                    deskripsi_ruangan = roomsModelMain.item?.deskripsi_ruangan,
-                                    fasilitas_ruangan = roomsModelMain.item?.fasilitas_ruangan,
-                                    foto_ruangan = roomsModelMain.item?.foto_ruangan,
-                                    id_ruangan = roomsModelMain.item?.id_ruangan,
-                                    isLent = true,
-                                    lantai_ruangan = roomsModelMain.item?.lantai_ruangan,
-                                    nama_ruangan = roomsModelMain.item?.nama_ruangan
-                                )
-                            )
-                        )
-                        onSaveToHistory.invoke(
-                            PeminjamanModel(
-                                fasilitas = fasilitasValue,
-                                jmulai = jMulaiValue,
-                                jselesai = jSelesaiValue,
-                                nama = namaValue,
-                                nim = nimValue,
-                                prodi = prodiValue,
-                                ruangan = ruanganValue,
-                                tanggal = tanggalValue
-                            )
-                        )
-                        confirmationDialog = false
-                    },
-                    pengajuanModel = PengajuanModel(
-                        jmulai = jMulaiValue,
-                        jselesai = jSelesaiValue,
-                        nama = namaValue,
-                        nim = nimValue,
-                        prodi = prodiValue,
-                        ruangan = ruanganValue,
-                        tanggal = tanggalValue,
-                        fotoRuangan = roomsModelMain.item?.foto_ruangan
+            Spacer(Modifier.height(spacerHeightValue))
+            OutlinedTextField(
+                value = keperluanValue,
+                onValueChange = {
+                    keperluanValue = it
+                },
+                label = { Text("Keperluan", style = MaterialTheme.typography.h3) },
+                colors = textFieldColorsStyle,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Workspaces,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
                     )
+                },
+                maxLines = 5,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(90.dp)
+            )
+            Spacer(Modifier.height(spacerHeightValue))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButtonUI(unit = unit, unitValue = unitValue, unitValueCallBack = {
+                    unitValue = it
+                })
+            }
+            Spacer(Modifier.height(spacerHeightValue))
+            penanggungJawab(penanggungJawabValue = penanggungJawabValue, penanggungJawabCallback = {
+                penanggungJawabValue = it
+            })
+            if (confirmationDialog) {
+                ConfirmationDialog(onDismiss = {
+                    onActionClick()
+                }, onConfirm = {
+                    onPinjamRuangan.invoke(
+                        PengajuanModel(
+                            jmulai = jMulaiValue,
+                            jselesai = jSelesaiValue,
+                            nama = namaValue,
+                            nim = nimValue,
+                            prodi = prodiValue,
+                            ruangan = ruanganValue,
+                            tanggal = tanggalValue,
+                            fotoRuangan = roomsModelMain.item?.foto_ruangan
+                        ), RoomsModelMain(
+                            key = roomsModelMain.key, item = RoomsModel(
+                                deskripsi_ruangan = roomsModelMain.item?.deskripsi_ruangan,
+                                fasilitas_ruangan = roomsModelMain.item?.fasilitas_ruangan,
+                                foto_ruangan = roomsModelMain.item?.foto_ruangan,
+                                id_ruangan = roomsModelMain.item?.id_ruangan,
+                                isLent = true,
+                                lantai_ruangan = roomsModelMain.item?.lantai_ruangan,
+                                nama_ruangan = roomsModelMain.item?.nama_ruangan
+                            )
+                        )
+                    )
+                    onSaveToHistory.invoke(
+                        PeminjamanModel(
+                            fasilitas = fasilitasValue,
+                            jmulai = jMulaiValue,
+                            jselesai = jSelesaiValue,
+                            nama = namaValue,
+                            nim = nimValue,
+                            prodi = prodiValue,
+                            ruangan = ruanganValue,
+                            tanggal = tanggalValue
+                        )
+                    )
+                    confirmationDialog = false
+                }, pengajuanModel = PengajuanModel(
+                    jmulai = jMulaiValue,
+                    jselesai = jSelesaiValue,
+                    nama = namaValue,
+                    nim = nimValue,
+                    prodi = prodiValue,
+                    ruangan = ruanganValue,
+                    tanggal = tanggalValue,
+                    fotoRuangan = roomsModelMain.item?.foto_ruangan
+                )
                 )
             }
 
             Spacer(Modifier.height(18.dp))
-//            OutlinedTextField(value = fasilitasValue,
-//                onValueChange = {
-//                    facilityState.show()
-//                    fasilitasValue = it
-//                },
-//                label = { Text("Fasilitas", style = MaterialTheme.typography.h3) },
-//                colors = textFieldColorsStyle,
-//                readOnly = true,
-//                leadingIcon = {
-//                    Icon(imageVector = Icons.Filled.Category,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colors.secondary,
-//                        modifier = modifier.clickable { facilityState.show() })
-//                },
-//                maxLines = 1,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .onFocusEvent { event ->
-//                        if (event.isFocused) isFacilityClicked = true
-//                    })
-//            Spacer(Modifier.height(12.dp))
+
             Button(
                 onClick = {
                     if (nimValue.isEmpty() || namaValue.isEmpty() || prodiValue.isEmpty() || ruanganValue.isEmpty() || tanggalValue.isEmpty() || jMulaiValue.isEmpty() || jSelesaiValue.isEmpty()) {
@@ -492,9 +520,7 @@ fun LendingForm(
                     )
                 } else {
                     Text(
-                        "Pinjam Ruangan",
-                        color = textColor,
-                        style = MaterialTheme.typography.body1
+                        "Pinjam Ruangan", color = textColor, style = MaterialTheme.typography.body1
                     )
                 }
             }
@@ -523,3 +549,84 @@ fun LendingForm(
     }
 }
 
+@Composable
+fun RadioButtonUI(
+    unit: Map<UnitEnum, String>,
+    unitValue: String,
+    unitValueCallBack: (String) -> Unit
+) {
+    val unitKeys = unit.keys
+
+    unitKeys.forEach {
+        val isSelectedValue = unit.getValue(it) == unitValue
+        val colors = RadioButtonDefaults.colors(
+            selectedColor = MaterialTheme.colors.secondary,
+            unselectedColor = MaterialTheme.colors.primary,
+            disabledColor = Color.LightGray
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(selected = isSelectedValue, colors = colors, onClick = {
+                unitValueCallBack.invoke(unit.getValue(it))
+            })
+            Text(
+                it.name, color = textColor, style = MaterialTheme.typography.body1,
+                fontSize = 12.sp
+            )
+        }
+
+    }
+}
+
+@Composable
+fun penanggungJawab(
+    penanggungJawabValue: String,
+    penanggungJawabCallback: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val suggestions = listOf("Diah Kusuma Wardhani", "Sari Ayu Maharani")
+
+    var textfieldSize by remember { mutableStateOf(Size.Zero) }
+
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+
+    Column(Modifier.padding(20.dp)) {
+        OutlinedTextField(
+            value = penanggungJawabValue,
+            onValueChange = { penanggungJawabCallback.invoke(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    //This value is used to assign to the DropDown the same width
+                    textfieldSize = coordinates.size.toSize()
+                },
+            label = { Text("Label") },
+            trailingIcon = {
+                Icon(icon, "contentDescription",
+                    Modifier.clickable { expanded = !expanded })
+            }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+        ) {
+            suggestions.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    penanggungJawabCallback.invoke(label)
+                    expanded = false
+                }) {
+                    Text(
+                        label, color = textColor, style = MaterialTheme.typography.body1,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        }
+    }
+
+}
