@@ -226,7 +226,6 @@ fun LendingForm(
                 UnitEnum.BEM to "BEM"
             )
 
-
             ruanganValue = roomsModelMain.item?.nama_ruangan!!
 
             if (isCalendarClicked) {
@@ -428,7 +427,7 @@ fun LendingForm(
                         tint = MaterialTheme.colors.secondary
                     )
                 },
-                maxLines = 5,
+                maxLines = 10,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(90.dp)
@@ -440,9 +439,12 @@ fun LendingForm(
                 })
             }
             Spacer(Modifier.height(spacerHeightValue))
-            penanggungJawab(penanggungJawabValue = penanggungJawabValue, penanggungJawabCallback = {
-                penanggungJawabValue = it
-            })
+            penanggungJawab(
+                penanggungJawabValue = penanggungJawabValue, penanggungJawabCallback = {
+                    penanggungJawabValue = it
+                },
+                textFieldColorsStyle = textFieldColorsStyle
+            )
             if (confirmationDialog) {
                 ConfirmationDialog(onDismiss = {
                     onActionClick()
@@ -456,6 +458,9 @@ fun LendingForm(
                             prodi = prodiValue,
                             ruangan = ruanganValue,
                             tanggal = tanggalValue,
+                            keperluan = keperluanValue,
+                            unit = unitValue,
+                            penanggungJawab = penanggungJawabValue,
                             fotoRuangan = roomsModelMain.item?.foto_ruangan
                         ), RoomsModelMain(
                             key = roomsModelMain.key, item = RoomsModel(
@@ -490,6 +495,9 @@ fun LendingForm(
                     prodi = prodiValue,
                     ruangan = ruanganValue,
                     tanggal = tanggalValue,
+                    keperluan = keperluanValue,
+                    unit = unitValue,
+                    penanggungJawab = penanggungJawabValue,
                     fotoRuangan = roomsModelMain.item?.foto_ruangan
                 )
                 )
@@ -580,7 +588,8 @@ fun RadioButtonUI(
 @Composable
 fun penanggungJawab(
     penanggungJawabValue: String,
-    penanggungJawabCallback: (String) -> Unit
+    penanggungJawabCallback: (String) -> Unit,
+    textFieldColorsStyle: TextFieldColors
 ) {
     var expanded by remember { mutableStateOf(false) }
     val suggestions = listOf("Diah Kusuma Wardhani", "Sari Ayu Maharani")
@@ -592,21 +601,29 @@ fun penanggungJawab(
     else
         Icons.Filled.KeyboardArrowDown
 
-
-    Column(Modifier.padding(20.dp)) {
+    Column {
         OutlinedTextField(
+            readOnly = true,
             value = penanggungJawabValue,
-            onValueChange = { penanggungJawabCallback.invoke(it) },
+            onValueChange = {
+                penanggungJawabCallback.invoke(it)
+            },
+            colors = textFieldColorsStyle,
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
                     //This value is used to assign to the DropDown the same width
                     textfieldSize = coordinates.size.toSize()
-                },
-            label = { Text("Label") },
+                }
+                .clickable { expanded = !expanded },
+            label = { Text("Penanggung Jawab", style = MaterialTheme.typography.h3) },
             trailingIcon = {
-                Icon(icon, "contentDescription",
-                    Modifier.clickable { expanded = !expanded })
+                Icon(
+                    icon,
+                    "contentDescription",
+                    Modifier.clickable { expanded = !expanded },
+                    tint = MaterialTheme.colors.secondary
+                )
             }
         )
         DropdownMenu(

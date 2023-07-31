@@ -112,12 +112,10 @@ fun ConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = tanggalValue.ifEmpty { "Ruangan:" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                         Spacer(Modifier.weight(1f))
                         Text(text = tanggalValue.ifEmpty { "${pengajuanModel.ruangan}" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                     }
 
                     Row(
@@ -126,12 +124,10 @@ fun ConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = tanggalValue.ifEmpty { "Tanggal:" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                         Spacer(Modifier.weight(1f))
                         Text(text = tanggalValue.ifEmpty { "${pengajuanModel.tanggal}" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -139,12 +135,10 @@ fun ConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = tanggalValue.ifEmpty { "Mulai:" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                         Spacer(Modifier.weight(1f))
                         Text(text = tanggalValue.ifEmpty { "${pengajuanModel.jmulai}" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -152,13 +146,44 @@ fun ConfirmationDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = tanggalValue.ifEmpty { "Selesai:" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                         Spacer(Modifier.weight(1f))
                         Text(text = tanggalValue.ifEmpty { "${pengajuanModel.jselesai}" },
-                            color = if (tanggalValue.isEmpty()) textColor else textColor,
-                            modifier = Modifier.clickable { calendarState.show() })
+                            color = if (tanggalValue.isEmpty()) textColor else textColor)
                     }
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceBetween,
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(text = "Keperluan:",
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                        Spacer(Modifier.weight(1f))
+//                        Text(text = tanggalValue.ifEmpty { "${pengajuanModel.keperluan}" },
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                    }
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceBetween,
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(text = "Unit:",
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                        Spacer(Modifier.weight(1f))
+//                        Text(text = tanggalValue.ifEmpty { "${pengajuanModel.unit}" },
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                    }
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceBetween,
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(text = "Penanggung Jawab:",
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                        Spacer(Modifier.weight(1f))
+//                        Text(text = tanggalValue.ifEmpty { "${pengajuanModel.penanggungJawab}" },
+//                            color = if (tanggalValue.isEmpty()) textColor else textColor)
+//                    }
                     Divider()
                 }
                 Row(
