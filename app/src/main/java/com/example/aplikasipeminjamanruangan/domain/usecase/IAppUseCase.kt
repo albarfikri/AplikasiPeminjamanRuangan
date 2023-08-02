@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.CameraXModel
+import com.example.aplikasipeminjamanruangan.domain.model.DosenModel
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
@@ -30,5 +31,5 @@ interface IAppUseCase {
     suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>>
     suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>>
     suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>>
-
+    suspend fun getDosen(): Flow<Resource<List<DosenModel?>>>
 }

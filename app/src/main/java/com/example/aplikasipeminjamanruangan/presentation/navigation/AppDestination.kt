@@ -55,6 +55,12 @@ object WaitingList: AppDestination{
     override val text = "Waiting"
 }
 
+object WaitingDetail: AppDestination{
+    override val icon = Icons.Filled.List
+    override val route = "Waiting Detail"
+    override val text = "Waiting Detail"
+}
+
 object History: AppDestination{
     override val icon = Icons.Filled.DateRange
     override val route = "History"

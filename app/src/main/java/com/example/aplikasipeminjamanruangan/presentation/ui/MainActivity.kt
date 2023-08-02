@@ -22,6 +22,7 @@ import com.example.aplikasipeminjamanruangan.presentation.navigation.Lending
 import com.example.aplikasipeminjamanruangan.presentation.navigation.LendingForm
 import com.example.aplikasipeminjamanruangan.presentation.navigation.NavGraph
 import com.example.aplikasipeminjamanruangan.presentation.navigation.Splash
+import com.example.aplikasipeminjamanruangan.presentation.navigation.WaitingDetail
 import com.example.aplikasipeminjamanruangan.presentation.navigation.listOfTabScreen
 import com.example.aplikasipeminjamanruangan.presentation.ui.theme.AplikasiPeminjamanRuanganTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +58,8 @@ class MainActivity : ComponentActivity() {
                             currentDestination?.route != HomeDetail.route
                             && currentDestination?.route != Lending.route &&
                             currentDestination?.route != LendingForm.route &&
-                            currentDestination?.route != Home.route
+                            currentDestination?.route != Home.route &&
+                            currentDestination?.route != WaitingDetail.route
                 ) {
                     bottomBar(navBackStackEntry = currentBackStack, navController = navController)
                 }

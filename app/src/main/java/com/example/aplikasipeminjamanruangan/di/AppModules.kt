@@ -3,6 +3,7 @@ package com.example.aplikasipeminjamanruangan.di
 import com.example.aplikasipeminjamanruangan.data.remote.firebase.RealtimeDB
 import com.example.aplikasipeminjamanruangan.presentation.utils.BASE_URL_IMAGE_DETECTION
 import com.example.aplikasipeminjamanruangan.presentation.utils.BASE_URL_PCR
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_DOSEN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_MATAKULIAH
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
@@ -31,13 +32,15 @@ class AppModules {
         @Named(DB_ROOMS) referenceDbRooms: DatabaseReference,
         @Named(DB_PENGAJUAN) referenceDbPengajuan: DatabaseReference,
         @Named(DB_PEMINJAMAN) referenceDbPeminjaman: DatabaseReference,
-        @Named(DB_MATAKULIAH) referenceDbMataKuliah: DatabaseReference
+        @Named(DB_MATAKULIAH) referenceDbMataKuliah: DatabaseReference,
+        @Named(DB_DOSEN) referenceDbDosen: DatabaseReference
     ): RealtimeDB =
         RealtimeDB(
             dbRoomsReference = referenceDbRooms,
             dbPengajuanReference = referenceDbPengajuan,
             dbPeminjamanReference = referenceDbPeminjaman,
-            dbMataKuliahReference = referenceDbMataKuliah
+            dbMataKuliahReference = referenceDbMataKuliah,
+            dbDosenReference = referenceDbDosen
         )
 
     @Provides

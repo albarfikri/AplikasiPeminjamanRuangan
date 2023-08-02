@@ -1,6 +1,7 @@
 package com.example.aplikasipeminjamanruangan.domain.repository
 
 import com.example.aplikasipeminjamanruangan.data.Resource
+import com.example.aplikasipeminjamanruangan.domain.model.DosenModel
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
@@ -20,4 +21,5 @@ interface IAppRepository {
     suspend fun getPengajuan(): Flow<Resource<List<PengajuanModel?>>>
     suspend fun insertPeminjaman(data: PeminjamanModel): Flow<Resource<String>>
     suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>>
+    suspend fun getDosen(): Flow<Resource<List<DosenModel?>>>
 }

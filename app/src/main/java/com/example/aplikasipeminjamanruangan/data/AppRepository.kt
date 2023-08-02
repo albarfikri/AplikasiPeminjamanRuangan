@@ -4,6 +4,7 @@ import com.example.aplikasipeminjamanruangan.BuildConfig
 import com.example.aplikasipeminjamanruangan.data.remote.firebase.RealtimeDB
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apiimagedetector.FileApi
 import com.example.aplikasipeminjamanruangan.data.remote.retrofit.apipcr.FilePcrApi
+import com.example.aplikasipeminjamanruangan.domain.model.DosenModel
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
@@ -94,4 +95,7 @@ class AppRepository @Inject constructor(
 
     override suspend fun getPeminjaman(): Flow<Resource<List<PeminjamanModel?>>> =
         realtimeDB.getPeminjaman()
+
+    override suspend fun getDosen(): Flow<Resource<List<DosenModel?>>> =
+        realtimeDB.getDosen()
 }

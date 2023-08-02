@@ -2,11 +2,13 @@ package com.example.aplikasipeminjamanruangan.data.remote.firebase
 
 import android.util.Log
 import com.example.aplikasipeminjamanruangan.data.Resource
+import com.example.aplikasipeminjamanruangan.domain.model.DosenModel
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsMataKuliah
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
+import com.example.aplikasipeminjamanruangan.presentation.utils.DB_DOSEN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_MATAKULIAH
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PEMINJAMAN
 import com.example.aplikasipeminjamanruangan.presentation.utils.DB_PENGAJUAN
@@ -26,7 +28,8 @@ class RealtimeDB @Inject constructor(
     @Named(DB_ROOMS) private val dbRoomsReference: DatabaseReference,
     @Named(DB_PENGAJUAN) private val dbPengajuanReference: DatabaseReference,
     @Named(DB_PEMINJAMAN) private val dbPeminjamanReference: DatabaseReference,
-    @Named(DB_MATAKULIAH) private val dbMataKuliahReference: DatabaseReference
+    @Named(DB_MATAKULIAH) private val dbMataKuliahReference: DatabaseReference,
+    @Named(DB_DOSEN) private val dbDosenReference: DatabaseReference
 ) {
     suspend fun getRooms(): Flow<Resource<List<RoomsModelMain?>>> = callbackFlow {
         trySend(Resource.Loading)
@@ -186,6 +189,26 @@ class RealtimeDB @Inject constructor(
             }
         }
         dbPeminjamanReference.addValueEventListener(event)
+        awaitClose { close() }
+    }
+
+    suspend fun getDosen(): Flow<Resource<List<DosenModel?>>> = callbackFlow {
+        trySend(Resource.Loading)
+        dbDosenReference.keepSynced(true)
+        dbDosenReference.orderByKey()
+        val event = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val dosen = snapshot.children.map { dataSnapshot ->
+                    dataSnapshot.getValue<DosenModel>()
+                }
+                trySend(Resource.Success(dosen))
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                trySend(Resource.Error(Throwable(error.message)))
+            }
+        }
+        dbDosenReference.addValueEventListener(event)
         awaitClose { close() }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.aplikasipeminjamanruangan.presentation.components.waiting
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,14 +42,18 @@ import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 
 @Composable
 fun ItemCardWaiting(
-    item: PengajuanModel
+    item: PengajuanModel,
+    onHeadToDetailWaiting: (PengajuanModel) -> Unit
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Color(0xFFDAE1E7),
         modifier = Modifier
             .height(210.dp)
-            .padding(10.dp),
+            .padding(10.dp)
+            .clickable {
+                onHeadToDetailWaiting.invoke(item)
+            },
         elevation = 10.dp
     ) {
         Row(

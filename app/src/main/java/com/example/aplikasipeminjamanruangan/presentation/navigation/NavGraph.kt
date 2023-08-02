@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.aplikasipeminjamanruangan.presentation.screen.HistoryScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.SearchingScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.SplashScreen
+import com.example.aplikasipeminjamanruangan.presentation.screen.WaitingDetailScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.WaitingScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeDetailScreen
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.HomeScreen
@@ -18,6 +19,7 @@ import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingFor
 import com.example.aplikasipeminjamanruangan.presentation.screen.home.LendingScreen
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.AppViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.CameraXViewModel
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.DosenViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.MataKuliahViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PeminjamanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
@@ -33,6 +35,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
     val pengajuanViewModel: PengajuanViewModel = hiltViewModel()
     val peminjamanViewModel: PeminjamanViewModel = hiltViewModel()
     val mataKuliahViewModel: MataKuliahViewModel = hiltViewModel()
+    val dosenViewModel: DosenViewModel = hiltViewModel()
 
     NavHost(
         navController = navController, startDestination = Splash.route, modifier = modifier
@@ -99,6 +102,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
 
         composable(route = LendingForm.route) {
             LendingFormScreen(
+                dosenViewModel = dosenViewModel,
                 sharedViewModel = sharedViewModel,
                 retrofitViewModel = retrofitViewModel,
                 pengajuanViewModel = pengajuanViewModel,
@@ -123,7 +127,19 @@ fun NavGraph(navController: NavHostController, modifier: Modifier) {
         }
 
         composable(route = WaitingList.route) {
-            WaitingScreen(pengajuanViewModel = pengajuanViewModel)
+            WaitingScreen(
+                pengajuanViewModel = pengajuanViewModel,
+                onHeadToDetailWaiting = {
+                    sharedViewModel.addPengajuan(it)
+                    navController.navigateSingleTopTo(WaitingDetail.route)
+                }
+            )
+        }
+        composable(route = WaitingDetail.route) {
+            WaitingDetailScreen(
+                sharedViewModel = sharedViewModel,
+                onNavBack = { navController.popBackStack() },
+            )
         }
         composable(route = History.route) {
             HistoryScreen(peminjamanViewModel = peminjamanViewModel)

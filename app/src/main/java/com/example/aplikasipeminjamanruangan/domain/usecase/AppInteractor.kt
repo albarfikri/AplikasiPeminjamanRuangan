@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import com.example.aplikasipeminjamanruangan.data.Resource
 import com.example.aplikasipeminjamanruangan.domain.model.CameraXModel
+import com.example.aplikasipeminjamanruangan.domain.model.DosenModel
 import com.example.aplikasipeminjamanruangan.domain.model.PeminjamanModel
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RetrofitImageModel
@@ -58,4 +59,7 @@ class AppInteractor @Inject constructor(
 
     override suspend fun getMataKuliah(): Flow<Resource<List<RoomsMataKuliah?>>> =
         appRepository.getMataKuliah()
+
+    override suspend fun getDosen(): Flow<Resource<List<DosenModel?>>> =
+        appRepository.getDosen()
 }

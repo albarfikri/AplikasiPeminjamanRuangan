@@ -78,11 +78,13 @@ import com.example.aplikasipeminjamanruangan.presentation.components.Calendar
 import com.example.aplikasipeminjamanruangan.presentation.components.Clock
 import com.example.aplikasipeminjamanruangan.presentation.components.ListDialog
 import com.example.aplikasipeminjamanruangan.presentation.components.home.TopAppBar
+import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBDosenState
 import com.example.aplikasipeminjamanruangan.presentation.states.RealtimeDBPengajuanState
 import com.example.aplikasipeminjamanruangan.presentation.states.RetrofitNimValidation
 import com.example.aplikasipeminjamanruangan.presentation.utils.ConfirmationDialog
 import com.example.aplikasipeminjamanruangan.presentation.utils.DataStore
 import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.DosenViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.RetrofitViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
@@ -98,6 +100,7 @@ enum class UnitEnum {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun LendingFormScreen(
+    dosenViewModel: DosenViewModel,
     sharedViewModel: SharedViewModel,
     retrofitViewModel: RetrofitViewModel,
     pengajuanViewModel: PengajuanViewModel,
@@ -110,6 +113,7 @@ fun LendingFormScreen(
     val data = sharedViewModel.sharedStated.collectAsStateWithLifecycle().value
     val dataRetrofit = retrofitViewModel.isNimValid.collectAsStateWithLifecycle().value
     val pengajuanState = pengajuanViewModel.pengajuanState.collectAsStateWithLifecycle().value
+    val dosenState = dosenViewModel.dosenState.collectAsStateWithLifecycle().value
 
     val scaffoldState = rememberScaffoldState()
     val snackBarCoroutineScope = rememberCoroutineScope()
@@ -148,6 +152,7 @@ fun LendingFormScreen(
                 LendingForm(
                     modifier = modifier,
                     roomsModelMain = data.data!!,
+                    dosenModel = dosenState,
                     retrofitData = dataRetrofit,
                     pengajuanState = pengajuanState,
                     onPinjamRuangan = onPinjamRuangan,
@@ -165,6 +170,7 @@ fun LendingFormScreen(
 fun LendingForm(
     modifier: Modifier,
     roomsModelMain: RoomsModelMain,
+    dosenModel: RealtimeDBDosenState,
     retrofitData: RetrofitNimValidation,
     pengajuanState: RealtimeDBPengajuanState,
     onPinjamRuangan: (PengajuanModel, RoomsModelMain) -> Unit,
@@ -440,6 +446,7 @@ fun LendingForm(
             }
             Spacer(Modifier.height(spacerHeightValue))
             penanggungJawab(
+                dosenList = dosenModel,
                 penanggungJawabValue = penanggungJawabValue, penanggungJawabCallback = {
                     penanggungJawabValue = it
                 },
@@ -587,12 +594,12 @@ fun RadioButtonUI(
 
 @Composable
 fun penanggungJawab(
+    dosenList: RealtimeDBDosenState,
     penanggungJawabValue: String,
     penanggungJawabCallback: (String) -> Unit,
     textFieldColorsStyle: TextFieldColors
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("Diah Kusuma Wardhani", "Sari Ayu Maharani")
 
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -632,13 +639,13 @@ fun penanggungJawab(
             modifier = Modifier
                 .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
         ) {
-            suggestions.forEach { label ->
+            dosenList.data?.forEach { label ->
                 DropdownMenuItem(onClick = {
-                    penanggungJawabCallback.invoke(label)
+                    penanggungJawabCallback.invoke(label?.inisial!!)
                     expanded = false
                 }) {
                     Text(
-                        label, color = textColor, style = MaterialTheme.typography.body1,
+                        label?.inisial!!, color = textColor, style = MaterialTheme.typography.body1,
                         fontSize = 12.sp
                     )
                 }

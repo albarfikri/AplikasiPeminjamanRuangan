@@ -42,6 +42,7 @@ import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PengajuanVie
 @Composable
 fun WaitingScreen(
     pengajuanViewModel: PengajuanViewModel,
+    onHeadToDetailWaiting: (PengajuanModel) -> Unit
 ) {
     val getPengajuan = pengajuanViewModel.getPengajuan.collectAsStateWithLifecycle().value
     var isSplashScreenStart by rememberSaveable {
@@ -78,7 +79,10 @@ fun WaitingScreen(
 
             !getPengajuan.data.isNullOrEmpty() -> {
                 isSplashScreenStart = false
-                SpreadingData(getPengajuan = getPengajuan)
+                SpreadingData(
+                    getPengajuan = getPengajuan,
+                    onHeadToDetailWaiting = onHeadToDetailWaiting
+                )
             }
 
             getPengajuan.errMsg!!.isNotEmpty() -> {
@@ -129,11 +133,12 @@ fun NoDataAvailableLottie(isSplashScreenStart: Boolean) {
 
 @Composable
 fun SpreadingData(
+    onHeadToDetailWaiting: (PengajuanModel) -> Unit,
     getPengajuan: RealtimeDBGetPengajuanState
 ) {
     LazyColumn {
         items(getPengajuan.data!!) { data ->
-            ItemCardWaiting(item = data!!)
+            ItemCardWaiting(item = data!!, onHeadToDetailWaiting = onHeadToDetailWaiting)
         }
     }
     Log.d("Albar", getPengajuan.toString())

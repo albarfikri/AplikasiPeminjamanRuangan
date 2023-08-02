@@ -1,8 +1,10 @@
 package com.example.aplikasipeminjamanruangan.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModel
 import com.example.aplikasipeminjamanruangan.domain.model.RoomsModelMain
+import com.example.aplikasipeminjamanruangan.presentation.states.SharedPengajuanViewModelState
 import com.example.aplikasipeminjamanruangan.presentation.states.SharedViewModelState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,8 +14,15 @@ class SharedViewModel : ViewModel() {
     private var _sharedState = MutableStateFlow(SharedViewModelState())
     val sharedStated = _sharedState.asStateFlow()
 
+    private var _sharedPengajuanState = MutableStateFlow(SharedPengajuanViewModelState())
+    val sharedPengajuanStated = _sharedPengajuanState.asStateFlow()
+
     fun addRooms(rooms: RoomsModelMain) {
         _sharedState.value.data = rooms
+    }
+
+    fun addPengajuan(pengajuan: PengajuanModel) {
+        _sharedPengajuanState.value.data = pengajuan
     }
 
     fun resetRoomsData() {
