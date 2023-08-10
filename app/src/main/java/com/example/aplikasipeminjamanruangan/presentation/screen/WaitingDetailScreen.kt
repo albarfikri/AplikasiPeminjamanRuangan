@@ -1,6 +1,13 @@
 package com.example.aplikasipeminjamanruangan.presentation.screen
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,7 +44,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -57,21 +67,28 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.layoutId
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.aplikasipeminjamanruangan.R
 import com.example.aplikasipeminjamanruangan.domain.model.PengajuanModel
+import com.example.aplikasipeminjamanruangan.presentation.ui.generatePDF
+import com.example.aplikasipeminjamanruangan.presentation.utils.PermissionDialog
+import com.example.aplikasipeminjamanruangan.presentation.utils.ReadExternalStorageProvider
 import com.example.aplikasipeminjamanruangan.presentation.utils.SwipingStates
+import com.example.aplikasipeminjamanruangan.presentation.utils.WriteExternalStorageProvider
 import com.example.aplikasipeminjamanruangan.presentation.utils.textColor
+import com.example.aplikasipeminjamanruangan.presentation.viewmodel.PermissionViewModel
 import com.example.aplikasipeminjamanruangan.presentation.viewmodel.SharedViewModel
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WaitingDetailScreen(
-    sharedViewModel: SharedViewModel,
-    onNavBack: () -> Unit,
+    sharedViewModel: SharedViewModel = viewModel(),
+    onNavBack: () -> Unit = {},
 ) {
 
     val data = sharedViewModel.sharedPengajuanStated.collectAsStateWithLifecycle().value
@@ -217,9 +234,7 @@ fun TopSection(
                     SwipingStates.COLLAPSED -> 0.0f
                     SwipingStates.EXPANDED -> 1.0f
                 }
-            ),
-        shape = RoundedCornerShape(bottomEnd = 22.dp, bottomStart = 22.dp),
-        elevation = 10.dp
+            ), shape = RoundedCornerShape(bottomEnd = 22.dp, bottomStart = 22.dp), elevation = 10.dp
     ) {
         AsyncImage(
             modifier = Modifier
@@ -249,15 +264,11 @@ fun TopSection(
             )
             .background(MaterialTheme.colors.background)
             .border(
-                width = 2.dp,
-                shape = CircleShape,
-                color = MaterialTheme.colors.secondary
+                width = 2.dp, shape = CircleShape, color = MaterialTheme.colors.secondary
             )
     ) {
         Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "",
-            tint = textColor
+            imageVector = Icons.Default.ArrowBack, contentDescription = "", tint = textColor
         )
     }
 
@@ -284,18 +295,73 @@ fun TopSection(
 
 @Composable
 fun BottomSection(data: PengajuanModel) {
+    val viewModel = viewModel<PermissionViewModel>()
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
+    val activity = LocalContext.current as Activity
+    val permissionToRequest = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+    )
+
+    val writePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            viewModel.onPermissionResult(
+                permission = Manifest.permission.WRITE_EXTERNAL_STORAGE, isGranted = isGranted
+            )
+        })
+
+
+    val readAndWritePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { perms ->
+            perms.keys.forEach { permission ->
+                viewModel.onPermissionResult(
+                    permission = permission, isGranted = perms[permission] == true
+                )
+            }
+        })
+
+    dialogQueue.reversed().forEach { permission ->
+        PermissionDialog(
+            permissionTextProvider = when (permission) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE -> WriteExternalStorageProvider()
+                Manifest.permission.READ_EXTERNAL_STORAGE -> ReadExternalStorageProvider()
+                else -> {
+                    return@forEach
+                }
+            }, isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                activity, permission
+            ), onDismiss = viewModel::dismissDialog, onOkClick = {
+                viewModel.dismissDialog()
+                readAndWritePermissionResultLauncher.launch(
+                    arrayOf(permission)
+                )
+            }, onGoToAppSettingsClick = activity::openAppSettings
+        )
+    }
     Box(
         modifier = Modifier
             .layoutId("body")
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)
     ) {
+        var downloadPdf by rememberSaveable {
+            mutableStateOf(false)
+        }
         val context = LocalContext.current
+
+        if (downloadPdf) {
+            generatePDF(context, data)
+            downloadPdf = false
+        }
+
         LaunchedEffect(Unit) {
             if (!data.pengajuanDiterima) Toast.makeText(
-                context,
-                "Tidak dapat download Bukti !\nPengajuan Belum diterima",
-                Toast.LENGTH_LONG
+                context, "Tidak dapat download Bukti !\nPengajuan Belum diterima", Toast.LENGTH_LONG
+            ).show()
+            if(data.pengembalianDiterima)Toast.makeText(
+                context, "Proses Peminjaman telah selesai", Toast.LENGTH_LONG
             ).show()
         }
         Column(
@@ -303,8 +369,7 @@ fun BottomSection(data: PengajuanModel) {
         ) {
             Text(text = "Peminjam", style = MaterialTheme.typography.h2, color = textColor)
             Text(
-                text = "${data.nama}",
-                color = textColor
+                text = "${data.nama}", color = textColor
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Nim", style = MaterialTheme.typography.h2, color = textColor)
@@ -330,6 +395,14 @@ fun BottomSection(data: PengajuanModel) {
             Spacer(modifier = Modifier.height(18.dp))
             Button(
                 onClick = {
+//                    readAndWritePermissionResultLauncher.launch(
+//                        permissionToRequest
+//                    )
+//                    writePermissionResultLauncher.launch(
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                    )
+                    //generatePDF3(context)
+                    downloadPdf = true
                 },
                 border = BorderStroke(1.dp, Color.White),
                 modifier = Modifier
@@ -360,7 +433,11 @@ fun BottomSection(data: PengajuanModel) {
     }
 }
 
-@Composable
-fun DownloadBukti() {
 
+fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)
+    ).also(
+        ::startActivity
+    )
 }

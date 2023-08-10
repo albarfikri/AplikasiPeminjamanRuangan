@@ -641,11 +641,11 @@ fun penanggungJawab(
         ) {
             dosenList.data?.forEach { label ->
                 DropdownMenuItem(onClick = {
-                    penanggungJawabCallback.invoke(label?.inisial!!)
+                    penanggungJawabCallback.invoke(label?.nama_dosen!!)
                     expanded = false
                 }) {
                     Text(
-                        label?.inisial!!, color = textColor, style = MaterialTheme.typography.body1,
+                        label?.nama_dosen!!, color = textColor, style = MaterialTheme.typography.body1,
                         fontSize = 12.sp
                     )
                 }
